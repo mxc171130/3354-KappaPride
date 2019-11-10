@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Kappa Pride SMS</string>
+    <string name="channel_name">KPSMS</string>
+    <string name="channel_description">Notifications from Kappa Pride SMS</string>
+    <string name="api_key">1cBnzcrfGQw-Gzupbkf0AiOQGVZr4zoxRz38153Q7y</string>
+    <string name="api_endpoint">https://api.txtlocal.com/</string>
 </resources>
