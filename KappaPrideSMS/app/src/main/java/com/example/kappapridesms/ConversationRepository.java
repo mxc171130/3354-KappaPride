@@ -1,5 +1,7 @@
 package com.example.kappapridesms;
 
+import java.util.*;
+
 public class ConversationRepository
 {
     private static final ConversationRepository instance = new ConversationRepository();
