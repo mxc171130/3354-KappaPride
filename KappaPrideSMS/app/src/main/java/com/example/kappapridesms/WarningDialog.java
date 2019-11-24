@@ -1,4 +1,4 @@
-package com.example.warningdialog;
+package com.example.kappapridesms;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -4,32 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Date;
 
 public class MessageActivity extends AppCompatActivity
 {
-    class SendThread implements Runnable
-    {
-        private long m_receiverPhone;
-        private String m_messageContent;
-
-        public void run()
-        {
-            RESTInterface.sendMessage(m_messageContent, m_receiverPhone);
-        }
-
-        private SendThread(long receiverPhone, String messageContent)
-        {
-            m_receiverPhone = receiverPhone;
-            m_messageContent = messageContent;
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -46,10 +36,12 @@ public class MessageActivity extends AppCompatActivity
         MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter();
         myRecyclerView.setAdapter(myRecyclerViewAdapter);
 
-        Intent serviceIntent = new Intent(this, ReceiverService.class);
-        startService(serviceIntent);
-
         // TEST CODE DOWN BELOW
+        if(checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.SEND_SMS}, 420);
+        }
+
         ConversationRepository testRepo = ConversationRepository.getInstance();
         testRepo.addConversation(new Conversation(19183521183L, 19183521183L));
         testRepo.setTargetConversation(0);
@@ -66,8 +58,8 @@ public class MessageActivity extends AppCompatActivity
 
         targetConversation.addMessage(new Message(timestamp, messageContent));
 
-        Thread sendThread = new Thread(new SendThread(targetConversation.getReceiverPhone(), messageContent));
-        sendThread.start();
+        SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(SmsManager.getDefaultSmsSubscriptionId());
+        smsManager.sendTextMessage("" + targetConversation.getAuthorPhone(), null, messageContent, null, null);
     }
 }
 
