@@ -99,7 +99,7 @@ public class Blacklist
     /**
      * Method that will return the current number of elements in the list.
      */
-    public int getSize()
+    public int size()
     {
         return m_blacklistedContacts.size();
     }

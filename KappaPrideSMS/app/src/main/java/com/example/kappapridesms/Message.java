@@ -8,28 +8,15 @@ import java.util.Locale;
 public class Message {
 
     // member variables
-    private long _timestamp;
-    private long _authorPhone;
-    private long _receiverPhone;
-    private String _content;
+    private long m_timestamp;
+    private String m_content;
 
     // returns timestamp for when each message was sent
-    public long getTimestamp() { return _timestamp; }
+    public long getTimestamp() { return m_timestamp; }
 
-    // returns the authors phone number
-    public long getAuthorPhone()
-    {
-        return _authorPhone;
-    }
-
-    // returns the receivers phone number
-    public long get_receiverPhone()
-    {
-        return _receiverPhone;
-    }
 
     // returns content of a message
-    public String getContent() { return _content; }
+    public String getContent() { return m_content; }
 
     // returns the current date
     public String getDate()
@@ -45,4 +32,9 @@ public class Message {
         return c;
     }
 
+    public Message(long _timestamp, String _content)
+    {
+        m_timestamp = _timestamp;
+        m_content = _content;
+    }
 }

@@ -1,46 +1,51 @@
 package com.example.kappapridesms;
 import java.util.ArrayList;
 
-public class Conversation {
+public class Conversation
+{
+    private ArrayList<Message> m_messageList;
+    private long m_authorPhone;
+    private long m_receiverPhone;
 
-    //member variables
-
-    private int size;
-    ArrayList<Message> messageList = new ArrayList<Message>();
-
-    //methods
-    // returns the size of the message list
-    public int size(int n)
+    public int size()
     {
-        return messageList.size();
+        return m_messageList.size();
     }
 
 
-
-    // *****************NOT SURE WHAT TO DO HERE****
-    public void addMessage(String s, int i)
+    public void addMessage(Message newMessage)
     {
-
-    }
-   //***********************************************
-
-
-
-
-    // removes a message from the list
-   public  void deleteMessage(int i)
-    {
-
-        messageList.remove(i);
-
+        m_messageList.add(newMessage);
     }
 
-    // Returns a message at the specified index
-     public Message getMessage(int index)
-     {
-         return messageList.get(index);
-
-     }
+    public  void deleteMessage(Message deleteMessage)
+    {
+        m_messageList.remove(deleteMessage);
+    }
 
 
+    public Message getMessage(int index)
+    {
+        return m_messageList.get(index);
+    }
+
+    // returns the authors phone number
+    public long getAuthorPhone()
+    {
+        return m_authorPhone;
+    }
+
+    // returns the receivers phone number
+    public long getReceiverPhone()
+    {
+        return m_receiverPhone;
+    }
+
+
+    public Conversation(long authorPhone, long receiverPhone)
+    {
+        m_messageList = new ArrayList<Message>();
+        m_authorPhone = authorPhone;
+        m_receiverPhone = receiverPhone;
+    }
 }

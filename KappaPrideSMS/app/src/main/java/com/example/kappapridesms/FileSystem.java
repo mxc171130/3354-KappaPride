@@ -73,12 +73,13 @@ public class FileSystem
     {
         try
         {
-            File conversationPath = new File("conversations");
+            File conversationPath = new File("conversations/");
             File[] allConversations = conversationPath.listFiles();
 
             for(int i = 0; i < allConversations.length; i++)
             {
-                Conversation addConversation = new Conversation();
+                String[] authorReceiver = allConversations[i].getName().split("_");
+                Conversation addConversation = new Conversation(Long.parseLong(authorReceiver[0]), Long.parseLong(authorReceiver[1]));
 
                 File[] allMessages = allConversations[i].listFiles();
 
@@ -86,10 +87,6 @@ public class FileSystem
                 {
                     // Obtain a BufferedReader to read each message
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(allMessages[j])));
-
-                    long authorNumber = Long.parseLong(bufferedReader.readLine());
-                    long receiverNumber = Long.parseLong(bufferedReader.readLine());
-                    long timestamp = Long.parseLong(bufferedReader.readLine());
 
                     StringBuilder contentBuilder = new StringBuilder();
                     String line;
@@ -101,12 +98,14 @@ public class FileSystem
 
                     bufferedReader.close();
 
+                    long timestamp = Long.parseLong(allMessages[i].getName());
+
                     // Recreate the message object and add it to the conversation
-                    Message addMessage = new Message(timestamp, authorNumber, receiverNumber, contentBuilder.toString());
+                    Message addMessage = new Message(timestamp, contentBuilder.toString());
                     addConversation.addMessage(addMessage);
                 }
 
-                conversations.add(conversation);
+                conversations.add(addConversation);
             }
         }
         catch(Exception ex)
@@ -122,29 +121,19 @@ public class FileSystem
             for(int i = 0; i < conversations.size(); i++)
             {
                 Conversation targetConversation = conversations.get(i);
-                Message directoryGeneratorMessage = conversations.get(i);
 
                 StringBuilder directoryBuilder = new StringBuilder();
                 directoryBuilder.append("conversations/");
-                directoryBuilder.append(directoryGeneratorMessage.getAuthorPhone());
+                directoryBuilder.append(targetConversation.getAuthorPhone());
                 directoryBuilder.append("_");
-                directoryBuilder.append(directoryGeneratorMessage.getReceiverPhone());
+                directoryBuilder.append(targetConversation.getReceiverPhone());
 
                 File directoryTestFile = new File(directoryBuilder.toString());
 
-                if(directoryTestFile.exists())
+                if(!directoryTestFile.exists())
                 {
-                    saveConversation(directoryBuilder.toString(), targetConversation);
+                    directoryTestFile.mkdirs();
                 }
-
-                directoryBuilder = new StringBuilder();
-
-                directoryBuilder.append("conversations/");
-                directoryBuilder.append(directoryGeneratorMessage.getReceiverPhone());
-                directoryBuilder.append("_");
-                directoryBuilder.append(directoryGeneratorMessage.getAuthorPhone());
-
-                directoryTestFile = new File(directoryBuilder.toString());
 
                 saveConversation(directoryBuilder.toString(), targetConversation);
             }
@@ -157,23 +146,27 @@ public class FileSystem
 
     private void saveConversation(String directory, Conversation conversation)
     {
-        for(int j = 0; j < conversation.size(); j++)
+        try
         {
-            Message saveMessage = targetConversation.getMessage(j);
+            for (int j = 0; j < conversation.size(); j++)
+            {
+                Message saveMessage = conversation.getMessage(j);
 
-            StringBuilder fileBuilder = new StringBuilder();
-            fileBuilder.append(directory);
-            fileBuilder.append("/");
-            fileBuilder.append(saveMessage.getTimestamp());
+                StringBuilder fileBuilder = new StringBuilder();
+                fileBuilder.append(directory);
+                fileBuilder.append("/");
+                fileBuilder.append(saveMessage.getTimestamp());
 
-            PrintWriter printWriter = new PrintWriter(new File(fileBuilder.toString()));
+                PrintWriter printWriter = new PrintWriter(new File(fileBuilder.toString()));
 
-            printWriter.println(saveMessage.getAuthorNumber());
-            printWriter.println(saveMessage.getReceiverNumber());
-            printWriter.println(saveMessage.getTimestamp());
-            printWriter.println(saveMessage.getContent());
+                printWriter.println(saveMessage.getContent());
 
-            printWriter.close();
+                printWriter.close();
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
@@ -220,7 +213,7 @@ public class FileSystem
         }
         catch(Exception ex)
         {
-
+            ex.printStackTrace();
         }
     }
 

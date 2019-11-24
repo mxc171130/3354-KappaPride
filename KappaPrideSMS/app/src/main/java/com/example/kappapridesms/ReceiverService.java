@@ -36,7 +36,8 @@ public class ReceiverService extends Service
                     Thread.sleep(10000);
 
                     // Get message inboxes from SMS server
-                    InboxSMSResponse inboxes = getInboxes();
+                    InboxSMSResponse inboxes = RESTInterface.getInboxes();
+                    System.out.println(inboxes.toString());
 
                     // Check each inbox for new messages
                     for(InboxSMSResponse.Inbox inbox : inboxes.inboxes)
@@ -44,12 +45,14 @@ public class ReceiverService extends Service
                         if(inbox.newMsgs > 0)
                         {
                             // This inbox has new messages, so get them
-                            GetSMSResponse messages = getMessages(inbox.id);
+                            GetSMSResponse messages = RESTInterface.getMessages(inbox.id);
 
                             for(GetSMSResponse.Message message : messages.messages)
                             {
                                 if(message.isNew)
                                 {
+                                    System.out.println("NEW MESSAGE: ");
+                                    System.out.println(message.message);
                                     // Notify the user that a new message was sent
                                     // Save the message using fs
                                 }
@@ -64,95 +67,6 @@ public class ReceiverService extends Service
             }
         }
 
-        private InboxSMSResponse getInboxes()
-        {
-            try
-            {
-                // Generate request URL
-                StringBuilder urlGenerator = new StringBuilder();
-                urlGenerator.append(getString(R.string.api_endpoint));
-                urlGenerator.append("get_inboxes/?apikey=");
-                urlGenerator.append(getString(R.string.api_key));
-
-                // Get response from REST call
-                String response = doRESTCall(urlGenerator.toString());
-
-                // Return GSON-translated response
-                InboxSMSResponse inboxSMSResponse = new Gson().fromJson(response.toString(), InboxSMSResponse.class);
-                return inboxSMSResponse;
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
-            // Error somewhere in try block, return null response.
-            return null;
-        }
-
-        private GetSMSResponse getMessages(String inboxId)
-        {
-            try
-            {
-                // Generate request URL
-                StringBuilder urlGenerator = new StringBuilder();
-                urlGenerator.append(getString(R.string.api_endpoint));
-                urlGenerator.append("get_messages/?apikey=");
-                urlGenerator.append(getString(R.string.api_key));
-                urlGenerator.append("&inbox_id=");
-                urlGenerator.append(inboxId);
-
-                // Get response from REST call
-                String response = doRESTCall(urlGenerator.toString());
-
-                // Return GSON-translated response
-                GetSMSResponse getSMSResponse = new Gson().fromJson(response, GetSMSResponse.class);
-                return getSMSResponse;
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
-            return null;
-        }
-
-        private String doRESTCall(String url)
-        {
-            try
-            {
-                // Create URL
-                URL resourceLocation = new URL(url.toString());
-
-                // Establish HTTP connection and set properties
-                HttpURLConnection connection = (HttpURLConnection) resourceLocation.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-                // Retrieve JSON response
-                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder responseBuilder = new StringBuilder();
-
-                String line;
-
-                while ((line = rd.readLine()) != null)
-                {
-                    responseBuilder.append(line);
-                }
-
-                // Close streams
-                rd.close();
-                connection.disconnect();
-
-                return responseBuilder.toString();
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
-            return null;
-        }
 
         private void notifyMessageReceived()
         {

@@ -4,33 +4,50 @@ import java.util.*;
 
 public class ConversationRepository
 {
-    private static final ConversationRepository instance = new ConversationRepository();
+    private static final ConversationRepository m_instance = new ConversationRepository();
 
-    private ArrayList<Conversation> conversations;
-    private ContactManager contactManager;
+    private ArrayList<Conversation> m_conversations;
+    private Conversation m_targetConversation;
+    private ContactManager m_contactManager;
+
+
+    public void addConversation(Conversation addConversation)
+    {
+        m_conversations.add(addConversation);
+    }
 
 
     public static ConversationRepository getInstance()
     {
-        return instance;
+        return m_instance;
     }
 
 
     public ArrayList<Conversation> getConversations()
     {
-        return conversations;
+        return m_conversations;
     }
 
 
     public ContactManager getContactManager()
     {
-        return contactManager;
+        return m_contactManager;
     }
 
 
+    public Conversation getTargetConversation()
+    {
+        return m_targetConversation;
+    }
+
+    public void setTargetConversation(int index)
+    {
+        m_targetConversation = m_conversations.get(index);
+    }
+
     private ConversationRepository()
     {
-        conversations = new ArrayList<Conversation>();
-        contactManager = new ContactManager();
+        m_conversations = new ArrayList<Conversation>();
+        m_contactManager = new ContactManager();
     }
 }

@@ -4,10 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity
+import java.util.Date;
+
+public class MessageActivity extends AppCompatActivity
 {
+    class SendThread implements Runnable
+    {
+        private long m_receiverPhone;
+        private String m_messageContent;
+
+        public void run()
+        {
+            RESTInterface.sendMessage(m_messageContent, m_receiverPhone);
+        }
+
+        private SendThread(long receiverPhone, String messageContent)
+        {
+            m_receiverPhone = receiverPhone;
+            m_messageContent = messageContent;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -23,6 +45,29 @@ public class MainActivity extends AppCompatActivity
 
         MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter();
         myRecyclerView.setAdapter(myRecyclerViewAdapter);
+
+        Intent serviceIntent = new Intent(this, ReceiverService.class);
+        startService(serviceIntent);
+
+        // TEST CODE DOWN BELOW
+        ConversationRepository testRepo = ConversationRepository.getInstance();
+        testRepo.addConversation(new Conversation(19183521183L, 19183521183L));
+        testRepo.setTargetConversation(0);
+    }
+
+
+    public void onSendClick(View view)
+    {
+        EditText messageText = (EditText) findViewById(R.id.message_text);
+        Conversation targetConversation = ConversationRepository.getInstance().getTargetConversation();
+
+        String messageContent = messageText.getText().toString();
+        long timestamp = new Date().getTime();
+
+        targetConversation.addMessage(new Message(timestamp, messageContent));
+
+        Thread sendThread = new Thread(new SendThread(targetConversation.getReceiverPhone(), messageContent));
+        sendThread.start();
     }
 }
 
@@ -37,7 +82,7 @@ package com.example.dialog;
         import android.view.View;
         import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity {
     private Button alertBtn;
 
     @Override
@@ -53,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         alertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder warning= new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder warning= new AlertDialog.Builder(MessageActivity.this);
                 warning.setMessage(errorDialog.getContent())
                         .setCancelable(false)
                         .setPositiveButton("Close app", new DialogInterface.OnClickListener() {

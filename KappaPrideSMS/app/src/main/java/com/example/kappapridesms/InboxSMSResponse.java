@@ -15,4 +15,20 @@ public class InboxSMSResponse
         int num_contacts;
         int newMsgs;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("Inbox Count: ");
+        builder.append(num_imboxes);
+        builder.append("\n");
+
+        builder.append("Status: ");
+        builder.append(status);
+        builder.append("\n");
+
+        return builder.toString();
+    }
 }
