@@ -1,6 +1,8 @@
 package com.example.kappapridesms;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,15 +10,18 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageActivity extends AppCompatActivity
 {
     public static final int PERM_REQUEST_CODE = 227;
+
+    private static MessageViewAdapter s_messageViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,15 +29,21 @@ public class MessageActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_activity);
 
-        RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.message_recycler);
+        RecyclerView messageRecyclerView = (RecyclerView) findViewById(R.id.message_recycler);
 
-        myRecyclerView.setHasFixedSize(true);
+        messageRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
-        myRecyclerView.setLayoutManager(myRecyclerLinearLayout);
+        messageRecyclerView.setLayoutManager(myRecyclerLinearLayout);
 
-        MyRecyclerViewAdapter myRecyclerViewAdapter = MyRecyclerViewAdapter.getInstance();
-        myRecyclerView.setAdapter(myRecyclerViewAdapter);
+
+        s_messageViewAdapter = new MessageViewAdapter();
+        s_messageViewAdapter.setHasStableIds(true);
+        messageRecyclerView.setAdapter(s_messageViewAdapter);
+
+        Toolbar mainTool = (Toolbar) findViewById(R.id.message_toolbar);
+        setSupportActionBar(mainTool);
+
 
         boolean[] perms = new boolean[4];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
@@ -94,6 +105,16 @@ public class MessageActivity extends AppCompatActivity
     {
         super.onResume();
         ConversationRepository.getInstance().loadConversations();
+        s_messageViewAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflator = getMenuInflater();
+        inflator.inflate(R.menu.message_menu, menu);
+        return true;
     }
 
 
@@ -111,7 +132,13 @@ public class MessageActivity extends AppCompatActivity
         SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(SmsManager.getDefaultSmsSubscriptionId());
         smsManager.sendTextMessage("" + targetConversation.getRecipientPhone(), null, messageContent, null, null);
 
-        MyRecyclerViewAdapter.getInstance().notifyDataSetChanged();
+        s_messageViewAdapter.notifyDataSetChanged();
+    }
+
+
+    public static MessageViewAdapter getMessageViewAdapter()
+    {
+        return s_messageViewAdapter;
     }
 }
 

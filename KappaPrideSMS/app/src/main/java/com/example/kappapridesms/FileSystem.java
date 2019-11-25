@@ -108,7 +108,7 @@ public class FileSystem
                     // Obtain a BufferedReader to read each message
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(allMessages[j])));
 
-                    boolean sentFromThisPhone = Boolean.getBoolean(bufferedReader.readLine());
+                    boolean sentFromThisPhone = bufferedReader.readLine().equals("true");
 
                     StringBuilder contentBuilder = new StringBuilder();
                     String line;
@@ -120,7 +120,7 @@ public class FileSystem
 
                     bufferedReader.close();
 
-                    long timestamp = Long.parseLong(allMessages[i].getName());
+                    long timestamp = Long.parseLong(allMessages[j].getName());
 
                     // Recreate the message object and add it to the conversation
                     Message addMessage = new Message(timestamp, sentFromThisPhone, contentBuilder.toString());
@@ -182,7 +182,15 @@ public class FileSystem
 
                 PrintWriter printWriter = new PrintWriter(new File(fileBuilder.toString()));
 
-                printWriter.println(saveMessage.isSentFromThisPhone());
+                if(saveMessage.isSentFromThisPhone())
+                {
+                    printWriter.println("true");
+                }
+                else
+                {
+                    printWriter.println("false");
+                }
+
                 printWriter.println(saveMessage.getContent());
 
                 printWriter.close();

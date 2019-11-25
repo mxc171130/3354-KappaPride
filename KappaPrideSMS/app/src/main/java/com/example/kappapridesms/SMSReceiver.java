@@ -1,12 +1,9 @@
 package com.example.kappapridesms;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.telephony.SmsMessage;
-import android.telephony.TelephonyManager;
 
 import java.util.Date;
 
@@ -55,6 +52,6 @@ public class SMSReceiver extends BroadcastReceiver
             FileSystem.getInstance().saveConversations(instance.getConversations());
         }
 
-        MyRecyclerViewAdapter.getInstance().notifyDataSetChanged();
+        MessageActivity.getMessageViewAdapter().notifyDataSetChanged();
     }
 }

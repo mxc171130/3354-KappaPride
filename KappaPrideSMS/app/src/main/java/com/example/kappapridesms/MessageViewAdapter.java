@@ -1,38 +1,29 @@
 package com.example.kappapridesms;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.selection.ItemDetailsLookup;
+import androidx.recyclerview.selection.StableIdKeyProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
+public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder> implements View.OnClickListener
 {
-    private static final MyRecyclerViewAdapter INSTANCE = new MyRecyclerViewAdapter();
-
-    public class MyViewHolder extends RecyclerView.ViewHolder
-    {
-        LinearLayout messageBubble;
-
-        public MyViewHolder(LinearLayout messageBubble)
-        {
-            super(messageBubble);
-            this.messageBubble = messageBubble;
-        }
-    }
-
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LinearLayout messageBubble = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.message_bubble, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(messageBubble);
-
+        MessageViewHolder myViewHolder = new MessageViewHolder(messageBubble);
+        messageBubble.setOnClickListener(this);
         return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder viewHolder, int pos)
+    public void onBindViewHolder(MessageViewHolder viewHolder, int pos)
     {
         ConversationRepository instance = ConversationRepository.getInstance();
         Conversation targetConversation = instance.getTargetConversation();
@@ -45,21 +36,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         if(selectedMessage.isSentFromThisPhone())
         {
-            ((TextView) viewHolder.messageBubble.getChildAt(0)).setText("You");
+            ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText("You");
         }
         else
         {
-            ((TextView) viewHolder.messageBubble.getChildAt(0)).setText(authorPhone + "");
+            ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorPhone + "");
         }
 
-        ((TextView) viewHolder.messageBubble.getChildAt(1)).setText(selectedMessage.getContent());
+        ((TextView) viewHolder.getMessageBubble().getChildAt(1)).setText(selectedMessage.getContent());
 
         StringBuilder dateTimeBuilder = new StringBuilder();
         dateTimeBuilder.append(selectedMessage.getDate());
         dateTimeBuilder.append(" at ");
         dateTimeBuilder.append(selectedMessage.getTime());
 
-        ((TextView) viewHolder.messageBubble.getChildAt(2)).setText(dateTimeBuilder.toString());
+        ((TextView) viewHolder.getMessageBubble().getChildAt(2)).setText(dateTimeBuilder.toString());
     }
 
     @Override
@@ -69,13 +60,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
 
-    public static MyRecyclerViewAdapter getInstance()
+    @Override
+    public void onClick(View v)
     {
-        return INSTANCE;
-    }
-
-
-    private MyRecyclerViewAdapter()
-    {
+        // Response for deleting/forwarding
     }
 }
