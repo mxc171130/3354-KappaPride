@@ -1,5 +1,7 @@
 package com.example.kappapridesms;
 
+import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +22,13 @@ public class FileSystem
     {
         try
         {
-            File blacklistFile = new File("contacts/blacklist.txt");
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/contacts/contacts.txt");
+
+            File blacklistFile = new File(pathBuilder.toString());
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(blacklistFile)));
             String line;
@@ -48,7 +56,13 @@ public class FileSystem
     {
         try
         {
-            File contactsFile = new File("contacts/contacts.txt");
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/contacts/contacts.txt");
+
+            File contactsFile = new File(pathBuilder.toString());
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(contactsFile)));
             String line;
@@ -73,13 +87,19 @@ public class FileSystem
     {
         try
         {
-            File conversationPath = new File("conversations/");
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/conversations/");
+
+            File conversationPath = new File(pathBuilder.toString());
             File[] allConversations = conversationPath.listFiles();
 
             for(int i = 0; i < allConversations.length; i++)
             {
-                String[] authorReceiver = allConversations[i].getName().split("_");
-                Conversation addConversation = new Conversation(Long.parseLong(authorReceiver[0]), Long.parseLong(authorReceiver[1]));
+                String recipientPhone = allConversations[i].getName();
+                Conversation addConversation = new Conversation(Long.parseLong(recipientPhone));
 
                 File[] allMessages = allConversations[i].listFiles();
 
@@ -87,6 +107,8 @@ public class FileSystem
                 {
                     // Obtain a BufferedReader to read each message
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(allMessages[j])));
+
+                    boolean sentFromThisPhone = Boolean.getBoolean(bufferedReader.readLine());
 
                     StringBuilder contentBuilder = new StringBuilder();
                     String line;
@@ -101,7 +123,7 @@ public class FileSystem
                     long timestamp = Long.parseLong(allMessages[i].getName());
 
                     // Recreate the message object and add it to the conversation
-                    Message addMessage = new Message(timestamp, contentBuilder.toString());
+                    Message addMessage = new Message(timestamp, sentFromThisPhone, contentBuilder.toString());
                     addConversation.addMessage(addMessage);
                 }
 
@@ -118,15 +140,17 @@ public class FileSystem
     {
         try
         {
+            Context applicationContext = KappaApplication.getAppContext();
+
             for(int i = 0; i < conversations.size(); i++)
             {
                 Conversation targetConversation = conversations.get(i);
 
                 StringBuilder directoryBuilder = new StringBuilder();
-                directoryBuilder.append("conversations/");
-                directoryBuilder.append(targetConversation.getAuthorPhone());
-                directoryBuilder.append("_");
-                directoryBuilder.append(targetConversation.getReceiverPhone());
+                directoryBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+                directoryBuilder.append("/conversations/");
+                directoryBuilder.append(targetConversation.getRecipientPhone());
+                directoryBuilder.append("/");
 
                 File directoryTestFile = new File(directoryBuilder.toString());
 
@@ -154,11 +178,11 @@ public class FileSystem
 
                 StringBuilder fileBuilder = new StringBuilder();
                 fileBuilder.append(directory);
-                fileBuilder.append("/");
                 fileBuilder.append(saveMessage.getTimestamp());
 
                 PrintWriter printWriter = new PrintWriter(new File(fileBuilder.toString()));
 
+                printWriter.println(saveMessage.isSentFromThisPhone());
                 printWriter.println(saveMessage.getContent());
 
                 printWriter.close();
@@ -174,7 +198,13 @@ public class FileSystem
     {
         try
         {
-            File contactsFile = new File("contacts/contacts.txt");
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/contacts/contacts.txt");
+
+            File contactsFile = new File(pathBuilder.toString());
 
             PrintWriter printWriter = new PrintWriter(contactsFile);
 
@@ -198,7 +228,13 @@ public class FileSystem
     {
         try
         {
-            File blacklistFile = new File("contacts/blacklist.txt");
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/contacts/blaklist.txt");
+
+            File blacklistFile = new File(pathBuilder.toString());
 
             PrintWriter printWriter = new PrintWriter(blacklistFile);
 

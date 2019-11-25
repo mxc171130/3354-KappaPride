@@ -40,6 +40,24 @@ public class ConversationRepository
         return m_targetConversation;
     }
 
+
+    public void loadConversations()
+    {
+        ArrayList<Conversation> loadedConversations = new ArrayList<Conversation>();
+        FileSystem.getInstance().loadConversations(loadedConversations);
+
+        for(int i = 0; i < loadedConversations.size(); i++)
+        {
+            if(loadedConversations.get(i).getRecipientPhone() == getTargetConversation().getRecipientPhone())
+            {
+                m_conversations = loadedConversations;
+                setTargetConversation(i);
+                break;
+            }
+        }
+    }
+
+
     public void setTargetConversation(int index)
     {
         m_targetConversation = m_conversations.get(index);

@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
+import java.util.Date;
+
 import static android.provider.Telephony.Sms.Intents.SMS_RECEIVED_ACTION;
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
@@ -19,36 +21,25 @@ public class SMSReceiver extends BroadcastReceiver
         if(intent.getAction().equals(SMS_RECEIVED_ACTION))
         {
             SmsMessage[] messages = getMessagesFromIntent(intent);
+            ConversationRepository instance = ConversationRepository.getInstance();
 
             nextMessage:
             for(SmsMessage message : messages)
             {
-                Message receivedMessage = new Message(message.getTimestampMillis(), message.getMessageBody());
-                TelephonyManager phoneNumberManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
-                String receiverPhoneNumber = null;
-
-                if(context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
-                {
-                    receiverPhoneNumber = phoneNumberManager.getLine1Number();
-                    receiverPhoneNumber = receiverPhoneNumber.replaceAll("\\+", "");
-                }
+                Message receivedMessage = new Message(new Date().getTime(), false, message.getMessageBody());
 
                 String senderPhoneNumber = message.getOriginatingAddress();
-
-                ConversationRepository instance = ConversationRepository.getInstance();
 
                 if(senderPhoneNumber.length() == 10)
                 {
                     senderPhoneNumber = "1" + senderPhoneNumber;
                 }
 
-                long receiverPhoneNumberLong = Long.parseLong(receiverPhoneNumber);
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
 
                 for(Conversation insertConversation : instance.getConversations())
                 {
-                    if(insertConversation.getAuthorPhone() == senderPhoneNumberLong && insertConversation.getReceiverPhone() == receiverPhoneNumberLong)
+                    if(insertConversation.getRecipientPhone() == senderPhoneNumberLong)
                     {
                         insertConversation.addMessage(receivedMessage);
                         continue nextMessage;
@@ -56,10 +47,14 @@ public class SMSReceiver extends BroadcastReceiver
                 }
 
                 // No conversation detected, create a new one and add the message to it
-                Conversation newConversation = new Conversation(senderPhoneNumberLong, receiverPhoneNumberLong);
+                Conversation newConversation = new Conversation(senderPhoneNumberLong);
                 instance.addConversation(newConversation);
                 newConversation.addMessage(receivedMessage);
             }
+
+            FileSystem.getInstance().saveConversations(instance.getConversations());
         }
+
+        MyRecyclerViewAdapter.getInstance().notifyDataSetChanged();
     }
 }

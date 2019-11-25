@@ -4,8 +4,7 @@ import java.util.ArrayList;
 public class Conversation
 {
     private ArrayList<Message> m_messageList;
-    private long m_authorPhone;
-    private long m_receiverPhone;
+    private long m_recipientPhone;
 
     public int size()
     {
@@ -17,6 +16,7 @@ public class Conversation
     {
         m_messageList.add(newMessage);
     }
+
 
     public  void deleteMessage(Message deleteMessage)
     {
@@ -30,22 +30,15 @@ public class Conversation
     }
 
     // returns the authors phone number
-    public long getAuthorPhone()
+    public long getRecipientPhone()
     {
-        return m_authorPhone;
-    }
-
-    // returns the receivers phone number
-    public long getReceiverPhone()
-    {
-        return m_receiverPhone;
+        return m_recipientPhone;
     }
 
 
-    public Conversation(long authorPhone, long receiverPhone)
+    public Conversation(long recipientPhone)
     {
         m_messageList = new ArrayList<Message>();
-        m_authorPhone = authorPhone;
-        m_receiverPhone = receiverPhone;
+        m_recipientPhone = recipientPhone;
     }
 }
