@@ -5,4 +5,5 @@
     <string name="send_button">Send</string>
     <string name="message_hint">Enter your message here</string>
     <string name="message_delete">Delete Message</string>
+    <string name="message_forward">Forward Message</string>
 </resources>

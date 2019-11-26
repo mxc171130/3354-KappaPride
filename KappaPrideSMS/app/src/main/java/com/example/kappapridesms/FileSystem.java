@@ -159,6 +159,13 @@ public class FileSystem
                     directoryTestFile.mkdirs();
                 }
 
+                File[] cleanArrayFiles = directoryTestFile.listFiles();
+
+                for(File deleteFile : cleanArrayFiles)
+                {
+                    deleteFile.delete();
+                }
+
                 saveConversation(directoryBuilder.toString(), targetConversation);
             }
         }

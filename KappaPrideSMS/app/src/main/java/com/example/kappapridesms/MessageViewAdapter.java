@@ -11,14 +11,13 @@ import androidx.recyclerview.selection.ItemDetailsLookup;
 import androidx.recyclerview.selection.StableIdKeyProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder> implements View.OnClickListener
+public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
 {
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LinearLayout messageBubble = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.message_bubble, parent, false);
         MessageViewHolder myViewHolder = new MessageViewHolder(messageBubble);
-        messageBubble.setOnClickListener(this);
         return myViewHolder;
     }
 
@@ -57,12 +56,5 @@ public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder> 
     public int getItemCount()
     {
         return ConversationRepository.getInstance().getTargetConversation().size();
-    }
-
-
-    @Override
-    public void onClick(View v)
-    {
-        // Response for deleting/forwarding
     }
 }

@@ -12,16 +12,26 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.Date;
 
-public class MessageActivity extends AppCompatActivity
+public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
     private static MessageViewAdapter s_messageViewAdapter;
+
+    private boolean m_deleteActive;
+
+    private boolean m_forwardActive;
+    private String m_forwardContent;
+    private ForwardDialog m_forwardDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,12 +40,14 @@ public class MessageActivity extends AppCompatActivity
         setContentView(R.layout.message_activity);
 
         RecyclerView messageRecyclerView = (RecyclerView) findViewById(R.id.message_recycler);
+        messageRecyclerView.setOnTouchListener(this);
 
         messageRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
         messageRecyclerView.setLayoutManager(myRecyclerLinearLayout);
 
+        m_forwardDialog = new ForwardDialog();
 
         s_messageViewAdapter = new MessageViewAdapter();
         s_messageViewAdapter.setHasStableIds(true);
@@ -118,12 +130,129 @@ public class MessageActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle item selection
+        switch(item.getItemId())
+        {
+            case R.id.message_delete:
+                m_deleteActive = true;
+                return true;
+            case R.id.message_forward:
+                m_forwardActive = true;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onForwardPositiveClickListener()
+    {
+        TextView messageText = (TextView) m_forwardDialog.getForwardContent().findViewById(R.id.forward_phone);
+        String stringNumber = "1" + messageText.getText();
+        long phoneNumber = Long.parseLong(stringNumber);
+
+        ConversationRepository instance = ConversationRepository.getInstance();
+
+        for(Conversation testConversation : instance.getConversations())
+        {
+            if(testConversation.getRecipientPhone() == phoneNumber)
+            {
+                sendMessage(testConversation, m_forwardContent);
+                return;
+            }
+        }
+
+        Conversation newConversation = new Conversation(phoneNumber);
+        instance.addConversation(newConversation);
+        sendMessage(newConversation, m_forwardContent);
+    }
+
+
+    @Override
+    public void onForwardNegativeClickListener()
+    {
+
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent ev)
+    {
+        if(m_deleteActive)
+        {
+            if(v instanceof RecyclerView)
+            {
+                RecyclerView recyclerView = (RecyclerView) v;
+                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                LinearLayout messageLayout = (LinearLayout) childView;
+                TextView messageView = (TextView) messageLayout.getChildAt(1);
+                String messageContent = (String) messageView.getText();
+
+                ConversationRepository instance = ConversationRepository.getInstance();
+                Conversation deleteFromConversation = instance.getTargetConversation();
+
+                for(int i = 0; i < deleteFromConversation.size(); i++)
+                {
+                    Message testMessage = deleteFromConversation.getMessage(i);
+
+                    if(testMessage.getContent().equals(messageContent))
+                    {
+                        deleteFromConversation.deleteMessage(testMessage);
+                        FileSystem.getInstance().saveConversations(instance.getConversations());
+                        s_messageViewAdapter.notifyDataSetChanged();
+
+                        m_deleteActive = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else if(m_forwardActive)
+        {
+            if(v instanceof RecyclerView)
+            {
+                RecyclerView recyclerView = (RecyclerView) v;
+                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                LinearLayout messageLayout = (LinearLayout) childView;
+                TextView messageView = (TextView) messageLayout.getChildAt(1);
+                m_forwardContent = (String) messageView.getText();
+
+                m_forwardDialog.show(getSupportFragmentManager(), "forward_dialog");
+
+                m_forwardActive = false;
+            }
+        }
+
+        return true;
+    }
+
+    public void activateDelete()
+    {
+        m_deleteActive = true;
+    }
+
+    public void activateForward()
+    {
+        m_forwardActive = true;
+    }
+
+
     public void onSendClick(View view)
     {
         EditText messageText = (EditText) findViewById(R.id.message_text);
         Conversation targetConversation = ConversationRepository.getInstance().getTargetConversation();
-
         String messageContent = messageText.getText().toString();
+
+        sendMessage(targetConversation, messageContent);
+    }
+
+    public void sendMessage(Conversation targetConversation, String messageContent)
+    {
         long timestamp = new Date().getTime();
 
         targetConversation.addMessage(new Message(timestamp, true, messageContent));
