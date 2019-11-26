@@ -1,20 +1,36 @@
 package com.example.kappapridesms;
+
 /**
  * Stores contact information about a user.
+ *<p>
+ *    Has two private attributes:
+ *    <p>
+ *        - m_phoneNumber
+ *    </p>
+ *    <p>
+ *        - m_name
+ *    </p>
  *
- * Has two private attributes:
- * - m_phoneNumber
- * - m_name
+ *    Has an overloaded constructor:
+ *    <p>
+ *        - Contact(String name, long phoneNumber)
+ *    </p>
  *
- * Has an overloaded constructor:
- * - Contact(String name, long phoneNumber)
+ *    Has four public methods:
+ *    <p>
+ *        - getPhoneNumber()
+ *    </p>
+ *    <p>
+ *        - setPhoneNumber(long newPhone)
+ *    </p>
+ *    <p>
+ *        - getName()
+ *    </p>
+ *    <p>
+ *        - setName(String newName)
+ *    </p>
  *
- * Has four public methods:
- * - getPhoneNumber()
- * - setPhoneNumber(long newPhone)
- * - getName()
- * - setName(String newName)
- *
+ *</p>
  * @author Mohammad Shalabi
  *
  */
