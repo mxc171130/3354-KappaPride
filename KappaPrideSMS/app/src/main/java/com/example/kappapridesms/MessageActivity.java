@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.Menu;
@@ -15,13 +19,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener
+public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
@@ -41,7 +48,7 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
         RecyclerView messageRecyclerView = (RecyclerView) findViewById(R.id.message_recycler);
         messageRecyclerView.setOnTouchListener(this);
-
+        messageRecyclerView.setNestedScrollingEnabled(false);
         messageRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
@@ -122,10 +129,49 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
 
     @Override
+    protected void onNewIntent(Intent receivedIntent)
+    {
+        setIntent(receivedIntent);
+
+        if(receivedIntent.getAction().equals(Intent.ACTION_SEARCH))
+        {
+            searchMessages(receivedIntent.getStringExtra(SearchManager.QUERY));
+        }
+    }
+
+
+    @Override
+    public boolean onClose()
+    {
+        ViewGroup recyclerView = (ViewGroup) findViewById(R.id.message_recycler);
+        ViewGroup recyclerElement;
+
+        for(int i = 0; i < recyclerView.getChildCount(); i++)
+        {
+            recyclerElement = (ViewGroup) recyclerView.getChildAt(i);
+
+            for(int j = 0; j < recyclerElement.getChildCount(); j++)
+            {
+                recyclerElement.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+            }
+        }
+
+        return false;
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflator = getMenuInflater();
         inflator.inflate(R.menu.message_menu, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnCloseListener(this);
+
         return true;
     }
 
@@ -231,16 +277,6 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         return true;
     }
 
-    public void activateDelete()
-    {
-        m_deleteActive = true;
-    }
-
-    public void activateForward()
-    {
-        m_forwardActive = true;
-    }
-
 
     public void onSendClick(View view)
     {
@@ -250,6 +286,36 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
         sendMessage(targetConversation, messageContent);
     }
+
+
+    public void searchMessages(String query)
+    {
+        ArrayList<View> allViewsWithQuery = new ArrayList<>();
+
+        findViewById(R.id.message_recycler).findViewsWithText(allViewsWithQuery, query, View.FIND_VIEWS_WITH_TEXT);
+
+        for(View highlightView : allViewsWithQuery)
+        {
+            highlightView.setBackgroundColor(Color.YELLOW);
+        }
+
+        /*
+        ConversationRepository instance = ConversationRepository.getInstance();
+        Conversation targetConversation = instance.getTargetConversation();
+
+        for(int i = 0; i < targetConversation.size(); i++)
+        {
+            if(targetConversation.getMessage(i).getContent().contains(query))
+            {
+                // Query matches this message, update its view holder
+
+                getCurrentFocus().findViewById(R.id.message_recycler).find
+            }
+        }
+
+        */
+    }
+
 
     public void sendMessage(Conversation targetConversation, String messageContent)
     {
@@ -262,6 +328,7 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         smsManager.sendTextMessage("" + targetConversation.getRecipientPhone(), null, messageContent, null, null);
 
         s_messageViewAdapter.notifyDataSetChanged();
+        System.out.println(targetConversation.size());
     }
 
 
