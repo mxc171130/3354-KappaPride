@@ -188,9 +188,14 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             case R.id.message_forward:
                 m_forwardActive = true;
                 return true;
+            case R.id.blacklist:
+                Intent intent = new Intent(MessageActivity.this, BlacklistActivity.class);
+                this.startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
 

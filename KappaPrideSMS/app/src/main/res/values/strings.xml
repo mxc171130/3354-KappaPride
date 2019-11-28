@@ -6,4 +6,7 @@
     <string name="message_hint">Enter your message here</string>
     <string name="message_delete">Delete Message</string>
     <string name="message_forward">Forward Message</string>
+    <string name="search_bar">Search Bar</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="list_empty">List is empty</string>
 </resources>
