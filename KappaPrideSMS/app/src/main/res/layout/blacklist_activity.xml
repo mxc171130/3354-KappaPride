@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/blacklist_toolbar" />
 
     <TextView
         android:id="@+id/text_empty"
@@ -21,10 +26,5 @@
         android:layout_weight="1"
         android:choiceMode="none"
         android:fastScrollEnabled="true"/>
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/blacklist_toolbar" />
-
 
 </LinearLayout>

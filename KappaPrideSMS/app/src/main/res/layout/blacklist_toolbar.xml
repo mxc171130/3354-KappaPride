@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:id="@+id/toolbar">
+    android:id="@+id/blacklist_toolbar"
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +17,8 @@
             android:layout_height="wrap_content"
 
             android:text="@string/blacklist"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@android:color/white"/>
     </RelativeLayout>
 
 </androidx.appcompat.widget.Toolbar>
+
