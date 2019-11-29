@@ -19,6 +19,7 @@ public class SMSReceiver extends BroadcastReceiver
         {
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
+            Blacklist blacklist = instance.getBlacklist();
 
             nextMessage:
             for(SmsMessage message : messages)
@@ -33,6 +34,14 @@ public class SMSReceiver extends BroadcastReceiver
                 }
 
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
+
+                for(int i = 0; i < blacklist.size(); i++)
+                {
+                    if(senderPhoneNumberLong == blacklist.getBlacklistedContact(i).getPhoneNumber())
+                    {
+                        continue nextMessage;
+                    }
+                }
 
                 for(Conversation insertConversation : instance.getConversations())
                 {

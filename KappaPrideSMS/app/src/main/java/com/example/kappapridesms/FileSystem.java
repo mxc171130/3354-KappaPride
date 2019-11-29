@@ -26,7 +26,7 @@ public class FileSystem
             StringBuilder pathBuilder = new StringBuilder();
 
             pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/contacts.txt");
+            pathBuilder.append("/contacts/blacklist");
 
             File blacklistFile = new File(pathBuilder.toString());
 
@@ -60,7 +60,7 @@ public class FileSystem
             StringBuilder pathBuilder = new StringBuilder();
 
             pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/contacts.txt");
+            pathBuilder.append("/contacts/contacts");
 
             File contactsFile = new File(pathBuilder.toString());
 
@@ -217,7 +217,7 @@ public class FileSystem
             StringBuilder pathBuilder = new StringBuilder();
 
             pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/contacts.txt");
+            pathBuilder.append("/contacts/contacts");
 
             File contactsFile = new File(pathBuilder.toString());
 
@@ -235,7 +235,7 @@ public class FileSystem
         }
         catch(Exception ex)
         {
-
+            ex.printStackTrace();
         }
     }
 
@@ -247,7 +247,7 @@ public class FileSystem
             StringBuilder pathBuilder = new StringBuilder();
 
             pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/blaklist.txt");
+            pathBuilder.append("/contacts/blacklist");
 
             File blacklistFile = new File(pathBuilder.toString());
 
@@ -270,5 +270,24 @@ public class FileSystem
 
     private FileSystem()
     {
+        try
+        {
+            Context applicationContext = KappaApplication.getAppContext();
+            StringBuilder pathBuilder = new StringBuilder();
+
+            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
+            pathBuilder.append("/contacts/");
+
+            File contactsLoc = new File(pathBuilder.toString());
+
+            if(!contactsLoc.exists())
+            {
+                contactsLoc.mkdirs();
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
     }
 }

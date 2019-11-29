@@ -9,6 +9,7 @@ public class ConversationRepository
     private ArrayList<Conversation> m_conversations;
     private Conversation m_targetConversation;
     private ContactManager m_contactManager;
+    private Blacklist m_blacklist;
 
 
     public void addConversation(Conversation addConversation)
@@ -20,6 +21,12 @@ public class ConversationRepository
     public static ConversationRepository getInstance()
     {
         return m_instance;
+    }
+
+
+    public Blacklist getBlacklist()
+    {
+        return m_blacklist;
     }
 
 
@@ -67,5 +74,6 @@ public class ConversationRepository
     {
         m_conversations = new ArrayList<Conversation>();
         m_contactManager = new ContactManager();
+        m_blacklist = new Blacklist();
     }
 }

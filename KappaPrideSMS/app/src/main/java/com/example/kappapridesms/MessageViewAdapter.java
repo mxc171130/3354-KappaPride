@@ -26,12 +26,12 @@ public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
     {
         ConversationRepository instance = ConversationRepository.getInstance();
         Conversation targetConversation = instance.getTargetConversation();
-
+        ContactManager contactManager = instance.getContactManager();
 
         long authorPhone = targetConversation.getRecipientPhone();
         Message selectedMessage = targetConversation.getMessage(pos);
+        Contact authorContact = contactManager.getContact(authorPhone);
 
-        // INSERT CONTACT ALIAS CODE HERE
 
         if(selectedMessage.isSentFromThisPhone())
         {
@@ -39,7 +39,15 @@ public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
         }
         else
         {
-            ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorPhone + "");
+            // INSERT CONTACT ALIAS CODE HERE
+            if(authorContact.getName().equals("DNE"))
+            {
+                ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorPhone + "");
+            }
+            else
+            {
+                ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorContact.getName());
+            }
         }
 
         ((TextView) viewHolder.getMessageBubble().getChildAt(1)).setText(selectedMessage.getContent());

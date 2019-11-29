@@ -9,6 +9,12 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/message_contact"
+        android:title="@string/message_contact" />
+    <item
+        android:id="@+id/message_blacklist"
+        android:title="@string/message_blacklist" />
+    <item
         android:id="@+id/message_delete"
         android:enabled="true"
         android:title="@string/message_delete"

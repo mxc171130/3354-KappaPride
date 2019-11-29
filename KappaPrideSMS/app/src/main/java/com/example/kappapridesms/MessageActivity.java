@@ -31,7 +31,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, SentReceiver.OnFailedSendListener, WarningDialog.WarningDialogListener
+public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, SentReceiver.OnFailedSendListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
@@ -46,6 +46,14 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     private ForwardDialog m_forwardDialog;
 
     private ErrorDialog m_errorDialog;
+
+    private boolean m_addContactActive;
+    private long m_addContactContent;
+    private AddContactDialog m_addContactDialog;
+
+    private boolean m_blacklistActive;
+    private long m_blacklistContent;
+    private BlacklistDialog m_blacklistDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,6 +72,8 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         m_forwardDialog = new ForwardDialog();
         m_errorDialog = new ErrorDialog();
         m_warningDialog = new WarningDialog();
+        m_addContactDialog = new AddContactDialog();
+        m_blacklistDialog = new BlacklistDialog();
 
         s_messageViewAdapter = new MessageViewAdapter();
         s_messageViewAdapter.setHasStableIds(true);
@@ -126,10 +136,27 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             requestPermissions(requestPermissions, PERM_REQUEST_CODE);
         }
 
+        ConversationRepository instance = ConversationRepository.getInstance();
+        ContactManager contactManager = instance.getContactManager();
+        Blacklist blacklist = instance.getBlacklist();
+
+        FileSystem fileSystem = FileSystem.getInstance();
+        fileSystem.loadContacts(instance.getContactManager());
+
+        ArrayList<Long> blacklistedNumbers = fileSystem.loadBlacklistNumbers();
+
+        if(blacklistedNumbers != null)
+        {
+            for (Long blacklistedNumber : blacklistedNumbers)
+            {
+                blacklist.addBlacklistedContact(contactManager.getContact(blacklistedNumber));
+            }
+        }
+
+
         // TEST CODE DOWN BELOW
-        ConversationRepository testRepo = ConversationRepository.getInstance();
-        testRepo.addConversation(new Conversation(19183521183L));
-        testRepo.setTargetConversation(0);
+        instance.addConversation(new Conversation(19183521183L));
+        instance.setTargetConversation(0);
     }
 
 
@@ -201,6 +228,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
                 return true;
             case R.id.message_forward:
                 m_forwardActive = true;
+                return true;
+            case R.id.message_contact:
+                m_addContactActive = true;
+                return true;
+            case R.id.message_blacklist:
+                m_blacklistActive = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -277,6 +310,41 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     }
 
     @Override
+    public void onContactPositiveClick()
+    {
+        TextView contactContent = (TextView) m_addContactDialog.getContactContent().findViewById(R.id.contact_field);
+        String contactName = contactContent.getText().toString();
+        ContactManager contactManager = ConversationRepository.getInstance().getContactManager();
+        contactManager.addContact(m_addContactContent, contactName);
+        contactManager.saveContacts();
+        s_messageViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onContactNegativeClick()
+    {
+
+    }
+
+    @Override
+    public void onBlacklistPositiveClick()
+    {
+        ConversationRepository instance = ConversationRepository.getInstance();
+        ContactManager contactManager = instance.getContactManager();
+        Blacklist blacklist = instance.getBlacklist();
+
+        Contact blacklistContact = contactManager.getContact(m_blacklistContent);
+        blacklist.addBlacklistedContact(blacklistContact);
+        FileSystem.getInstance().saveBlacklistNumbers(blacklist);
+    }
+
+    @Override
+    public void onBlacklistNegativeClick()
+    {
+
+    }
+
+    @Override
     public boolean onTouch(View v, MotionEvent ev)
     {
         if(m_deleteActive)
@@ -304,6 +372,72 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
                 m_forwardDialog.show(getSupportFragmentManager(), "forward_dialog");
 
                 m_forwardActive = false;
+            }
+        }
+        else if(m_addContactActive)
+        {
+            if(v instanceof RecyclerView)
+            {
+                RecyclerView recyclerView = (RecyclerView) v;
+                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                LinearLayout messageLayout = (LinearLayout) childView;
+                TextView messageView = (TextView) messageLayout.getChildAt(0);
+                String addContactContent = (String) messageView.getText();
+
+                ConversationRepository instance = ConversationRepository.getInstance();
+                ContactManager contactManager = instance.getContactManager();
+
+                long phoneNumber;
+
+                try
+                {
+                    phoneNumber = Long.parseLong(addContactContent);
+                }
+                catch(Exception ex)
+                {
+                    return true;
+                }
+
+                if(!contactManager.getContact(phoneNumber).getName().equals("DNE"))
+                {
+                    return true;
+                }
+
+                m_addContactContent = phoneNumber;
+
+                m_addContactDialog.show(getSupportFragmentManager(), "add_contact_dialog");
+
+                m_addContactActive = false;
+            }
+        }
+        else if(m_blacklistActive)
+        {
+            if(v instanceof RecyclerView)
+            {
+                RecyclerView recyclerView = (RecyclerView) v;
+                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                LinearLayout messageLayout = (LinearLayout) childView;
+                TextView messageView = (TextView) messageLayout.getChildAt(0);
+                String blacklistContactContent = (String) messageView.getText();
+
+                ConversationRepository instance = ConversationRepository.getInstance();
+                ContactManager contactManager = instance.getContactManager();
+                Blacklist blacklist = instance.getBlacklist();
+
+                long phoneNumber = contactManager.getNumberFromName(blacklistContactContent);
+
+                if(phoneNumber == 0)
+                {
+                    phoneNumber = Long.parseLong(blacklistContactContent);
+                }
+
+                m_blacklistContent = phoneNumber;
+
+                m_blacklistDialog.show(getSupportFragmentManager(), "blacklist_dialog");
+
+                m_blacklistActive = false;
             }
         }
 

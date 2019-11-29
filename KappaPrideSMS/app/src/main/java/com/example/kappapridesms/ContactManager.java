@@ -42,7 +42,7 @@ public class ContactManager
     /**
      * This is the contact list, which is an arraylist of class Contact.
      */
-    private List<Contact> m_contacts = new ArrayList<Contact>();
+    private ArrayList<Contact> m_contacts = new ArrayList<Contact>();
 
     /**
      * This is just keeps track of the size of the contacts list, with an initial size of zero.
@@ -133,5 +133,25 @@ public class ContactManager
             }
         }
         return false;
+    }
+
+
+    public long getNumberFromName(String name)
+    {
+        for(Iterator<Contact> iterator = m_contacts.listIterator(); iterator.hasNext(); )
+        {
+            Contact tempContact = iterator.next();
+            if(tempContact.getName().equals(name))
+            {
+                return tempContact.getPhoneNumber();
+            }
+        }
+        return 0L;
+    }
+
+
+    public void saveContacts()
+    {
+        FileSystem.getInstance().saveContacts(m_contacts);
     }
 }
