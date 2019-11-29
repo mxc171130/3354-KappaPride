@@ -1,71 +1,51 @@
 package com.example.kappapridesms;
 
-import android.app.Activity;
+
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.SearchView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
 import java.util.Iterator;
+import android.os.Bundle;
 
-public class ConversationActivity extends Activity
+public class ConversationActivity extends AppCompatActivity implements View.OnTouchListener, SearchView.OnCloseListener
 {
-    private ConversationRepository m_conversationRep = ConversationRepository.getInstance();
+    // TODO must add this activity to the manifest, will add it on a later commit
 
-    public void deleteConversation(Conversation conversationToDelete)
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        Iterator<Conversation> iterator = m_conversationRep.getConversations().iterator();
-        while (iterator.hasNext())
-        {
-            Conversation conversation = iterator.next();
-            if (conversation.equals(conversationToDelete))
-            {
-                iterator.remove();
-            }
-        }
-
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.conversation_activity);
     }
 
-    //TODO
-    public void displayDeleteWarning(String warning)
-    {
-
+    // TODO implement functionality
+    /**
+     * Called when a touch event is dispatched to a view. This allows listeners to
+     * get a chance to respond before the target view.
+     *
+     * @param v     The view the touch event has been dispatched to.
+     * @param event The MotionEvent object containing full information about
+     *              the event.
+     * @return True if the listener has consumed the event, false otherwise.
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
-    //TODO
-    public void searchConversationsForMessages(String query)
-    {
-
+    // TODO implement functionality
+    /**
+     * The user is attempting to close the SearchView.
+     *
+     * @return true if the listener wants to override the default behavior of clearing the
+     * text field and dismissing it, false otherwise.
+     */
+    @Override
+    public boolean onClose() {
+        return false;
     }
-
-    //TODO
-    public void viewConversations()
-    {
-
-    }
-
-    //TODO
-    public void scrollConversationList(boolean up)
-    {
-
-    }
-
-    //TODO
-    public void zoom(double scale)
-    {
-
-    }
-
-    //TODO
-    public void loadConversation()
-    {
-        // not sure what we are going to do here
-    }
-
-    //TODO
-    public void createContact()
-    {
-
-    }
-
-
-
-
-
 }
