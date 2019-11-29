@@ -2,6 +2,7 @@ package com.example.kappapridesms;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
@@ -34,6 +35,14 @@ import androidx.fragment.app.DialogFragment;
 public class WarningDialog extends DialogFragment
 {
     private String m_content = "Warning! You are about to delete your message.";
+    private WarningDialogListener m_warningListener;
+
+    public interface WarningDialogListener
+    {
+        void onWarningPositiveClick();
+        void onWarningNegativeClick();
+    }
+
 
     /**
      * Calls the super class onCreate method to create an
@@ -46,6 +55,23 @@ public class WarningDialog extends DialogFragment
     {
         super.onCreate(savedInstancesState);
     }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+
+        try
+        {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            m_warningListener = (WarningDialogListener) context;
+        }catch(ClassCastException e)
+        {
+            // Context does not implement ForwardDialogListener
+            throw new ClassCastException("Context instance does not implement ForwardDialogListener");
+        }
+    }
+
 
     /**
      * Creates a new instance of a WarningDialog fragment
@@ -79,6 +105,7 @@ public class WarningDialog extends DialogFragment
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
+                m_warningListener.onWarningPositiveClick();
                 dismiss();
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -87,6 +114,7 @@ public class WarningDialog extends DialogFragment
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
+                m_warningListener.onWarningNegativeClick();
                 dismiss();
             }
         });

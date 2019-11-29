@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,17 +31,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener
+public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, SentReceiver.OnFailedSendListener, WarningDialog.WarningDialogListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
     private static MessageViewAdapter s_messageViewAdapter;
 
     private boolean m_deleteActive;
+    private View m_deleteView;
+    private WarningDialog m_warningDialog;
 
     private boolean m_forwardActive;
     private String m_forwardContent;
     private ForwardDialog m_forwardDialog;
+
+    private ErrorDialog m_errorDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,6 +62,8 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         messageRecyclerView.setLayoutManager(myRecyclerLinearLayout);
 
         m_forwardDialog = new ForwardDialog();
+        m_errorDialog = new ErrorDialog();
+        m_warningDialog = new WarningDialog();
 
         s_messageViewAdapter = new MessageViewAdapter();
         s_messageViewAdapter.setHasStableIds(true);
@@ -63,6 +72,11 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         Toolbar mainTool = (Toolbar) findViewById(R.id.message_toolbar);
         setSupportActionBar(mainTool);
 
+        SentReceiver contextRegisteredSentReceiver = new SentReceiver(this);
+        IntentFilter sentReceiverFilter = new IntentFilter();
+        sentReceiverFilter.addAction("SMS_SENT");
+
+        registerReceiver(contextRegisteredSentReceiver, sentReceiverFilter);
 
         boolean[] perms = new boolean[4];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
@@ -114,7 +128,7 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
         // TEST CODE DOWN BELOW
         ConversationRepository testRepo = ConversationRepository.getInstance();
-        testRepo.addConversation(new Conversation(16505551212L));
+        testRepo.addConversation(new Conversation(19183521183L));
         testRepo.setTargetConversation(0);
     }
 
@@ -188,14 +202,16 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             case R.id.message_forward:
                 m_forwardActive = true;
                 return true;
-            case R.id.blacklist:
-                Intent intent = new Intent(MessageActivity.this, BlacklistActivity.class);
-                this.startActivity(intent);
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return true;
+    }
+
+
+    @Override
+    public void onFailedSend()
+    {
+        m_errorDialog.show(getSupportFragmentManager(), "error_dialog");
     }
 
 
@@ -230,6 +246,37 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     }
 
     @Override
+    public void onWarningPositiveClick()
+    {
+        LinearLayout messageLayout = (LinearLayout) m_deleteView;
+        TextView messageView = (TextView) messageLayout.getChildAt(1);
+        String messageContent = (String) messageView.getText();
+
+        ConversationRepository instance = ConversationRepository.getInstance();
+        Conversation deleteFromConversation = instance.getTargetConversation();
+
+        for(int i = 0; i < deleteFromConversation.size(); i++)
+        {
+            Message testMessage = deleteFromConversation.getMessage(i);
+
+            if(testMessage.getContent().equals(messageContent))
+            {
+                deleteFromConversation.deleteMessage(testMessage);
+                FileSystem.getInstance().saveConversations(instance.getConversations());
+                s_messageViewAdapter.notifyDataSetChanged();
+
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onWarningNegativeClick()
+    {
+
+    }
+
+    @Override
     public boolean onTouch(View v, MotionEvent ev)
     {
         if(m_deleteActive)
@@ -237,29 +284,10 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             if(v instanceof RecyclerView)
             {
                 RecyclerView recyclerView = (RecyclerView) v;
-                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+                m_deleteView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
 
-                LinearLayout messageLayout = (LinearLayout) childView;
-                TextView messageView = (TextView) messageLayout.getChildAt(1);
-                String messageContent = (String) messageView.getText();
-
-                ConversationRepository instance = ConversationRepository.getInstance();
-                Conversation deleteFromConversation = instance.getTargetConversation();
-
-                for(int i = 0; i < deleteFromConversation.size(); i++)
-                {
-                    Message testMessage = deleteFromConversation.getMessage(i);
-
-                    if(testMessage.getContent().equals(messageContent))
-                    {
-                        deleteFromConversation.deleteMessage(testMessage);
-                        FileSystem.getInstance().saveConversations(instance.getConversations());
-                        s_messageViewAdapter.notifyDataSetChanged();
-
-                        m_deleteActive = false;
-                        break;
-                    }
-                }
+                m_warningDialog.show(getSupportFragmentManager(), "warning_dialog");
+                m_deleteActive = false;
             }
         }
         else if(m_forwardActive)
@@ -329,11 +357,13 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         targetConversation.addMessage(new Message(timestamp, true, messageContent));
         FileSystem.getInstance().saveConversations(ConversationRepository.getInstance().getConversations());
 
+        PendingIntent sentIntent = PendingIntent.getBroadcast(this,0, new Intent("SMS_SENT"),0);
+
+
         SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(SmsManager.getDefaultSmsSubscriptionId());
-        smsManager.sendTextMessage("" + targetConversation.getRecipientPhone(), null, messageContent, null, null);
+        smsManager.sendTextMessage("" + targetConversation.getRecipientPhone(), null, messageContent, sentIntent, null);
 
         s_messageViewAdapter.notifyDataSetChanged();
-        System.out.println(targetConversation.size());
     }
 
 
