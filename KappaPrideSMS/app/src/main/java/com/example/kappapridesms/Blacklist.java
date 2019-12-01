@@ -44,7 +44,7 @@ public class Blacklist
     /**
      * This is the list of blacklisted contacts
      */
-    private List<Contact> m_blacklistedContacts = new ArrayList<Contact>();
+    private ArrayList<Contact> m_blacklistedContacts = new ArrayList<Contact>();
 
     /**
      * This is used to keep track of the size of the blacklist, with an initial value of zero.

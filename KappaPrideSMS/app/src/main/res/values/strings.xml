@@ -6,8 +6,11 @@
     <string name="message_hint">Enter your message here</string>
     <string name="message_delete">Delete Message</string>
     <string name="message_forward">Forward Message</string>
-    <string name="search_bar">Search Bar</string>
+    <string name="message_contact">Add Contact</string>
+    <string name="message_blacklist">Blacklist Number</string>
     <string name="blacklist">Blacklist</string>
-    <string name="list_empty">List is empty</string>
-    <string name="add_contact">Add</string>
+    <string name="contacts">Contacts</string>
+    <string name="search_bar">Search</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

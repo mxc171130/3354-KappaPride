@@ -1,51 +1,51 @@
 package com.example.kappapridesms;
 
-
+import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 import java.util.Iterator;
-import android.os.Bundle;
 
-public class ConversationActivity extends AppCompatActivity implements View.OnTouchListener, SearchView.OnCloseListener
+public class ConversationActivity extends AppCompatActivity implements ListView.OnItemClickListener
 {
-    // TODO must add this activity to the manifest, will add it on a later commit
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation_activity);
+
+        // need to implement appropriate methods
+
     }
 
-    // TODO implement functionality
+
     /**
-     * Called when a touch event is dispatched to a view. This allows listeners to
-     * get a chance to respond before the target view.
+     * Callback method to be invoked when an item in this AdapterView has
+     * been clicked.
+     * <p>
+     * Implementers can call getItemAtPosition(position) if they need
+     * to access the data associated with the selected item.
      *
-     * @param v     The view the touch event has been dispatched to.
-     * @param event The MotionEvent object containing full information about
-     *              the event.
-     * @return True if the listener has consumed the event, false otherwise.
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
+     * @param position The position of the view in the adapter.
+     * @param id       The row id of the item that was clicked.
      */
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // need to finish
     }
 
-    // TODO implement functionality
-    /**
-     * The user is attempting to close the SearchView.
-     *
-     * @return true if the listener wants to override the default behavior of clearing the
-     * text field and dismissing it, false otherwise.
-     */
-    @Override
-    public boolean onClose() {
-        return false;
-    }
+
 }

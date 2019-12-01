@@ -28,8 +28,16 @@
         </receiver>
 
         <activity
+            android:name=".ConversationActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity
             android:name=".MessageActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />
@@ -38,14 +46,6 @@
             <meta-data android:name="android.app.searchable"
                         android:resource="@xml/searchable" />
         </activity>
-
-        <activity
-            android:name=".BlacklistActivity"
-            android:label="@string/blacklist"
-            android:launchMode="singleTask">
-
-        </activity>
-
     </application>
 
 </manifest>

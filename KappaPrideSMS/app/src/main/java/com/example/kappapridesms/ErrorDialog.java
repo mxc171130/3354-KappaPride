@@ -1,4 +1,4 @@
-package com.example.errordialog;
+package com.example.kappapridesms;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,7 +9,8 @@ import androidx.fragment.app.DialogFragment;
 
 public class ErrorDialog extends DialogFragment
 {
-    private String content="Message cannot be sent";
+    private String content = "Message cannot be sent";
+
     public static ErrorDialog newInstance()
     {
         ErrorDialog frag=new ErrorDialog();
@@ -18,6 +19,7 @@ public class ErrorDialog extends DialogFragment
         return frag;
 
     }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
