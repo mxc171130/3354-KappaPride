@@ -13,9 +13,6 @@
     <string name="search_bar">Search</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-<<<<<<< HEAD
     <string name="list_is_empty">List is empty</string>
-=======
     <string name="conversation_add">Start Conversation</string>
->>>>>>> dfbb41cd71de1f45038a1039dfb8c09f8d337e36
 </resources>
