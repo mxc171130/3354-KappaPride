@@ -36,7 +36,7 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
     @Override
     public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LinearLayout conversationBox = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_box, parent, false);
+        LinearLayout conversationBox = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_bubble, parent, false);
         ConversationViewHolder viewHolder = new ConversationViewHolder(conversationBox);
         return viewHolder;
     }
@@ -70,6 +70,7 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
 
         // must be able to go to a conversation that is selected.
         // It then goes to MessageActivity view
+
 
 
     }

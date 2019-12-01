@@ -83,7 +83,6 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
         initializeToggle(mainTool);
 
-
         SentReceiver contextRegisteredSentReceiver = new SentReceiver(this);
         IntentFilter sentReceiverFilter = new IntentFilter();
         sentReceiverFilter.addAction("SMS_SENT");
@@ -113,7 +112,29 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         // TEST CODE DOWN BELOW
         instance.addConversation(new Conversation(19183521183L));
         instance.setTargetConversation(0);
+
+        // go back to ConversationActivity
+        // configureConversationActivity();
+
     }
+
+
+    // Need to Test Code
+    /**
+     *  Code that will go back to the Conversation Activity
+     *  private void configureConversationActivity()
+     *  {
+     *      Button backButton = (Button) findViewById(R.id.backButton);
+     *      backButton.setOnClickListener(new View.OnClickListener() {
+     *          public void onClick(View view) {
+     *              finish();
+     *          }
+     *      });
+     *  }
+     *
+     */
+
+
 
     private void setUpPermissions() {
         boolean[] perms = new boolean[4];

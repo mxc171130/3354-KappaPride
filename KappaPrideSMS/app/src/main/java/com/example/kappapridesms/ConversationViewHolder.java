@@ -6,22 +6,22 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-// This class is very similar to MessageViewHolder class
+
 
 public class ConversationViewHolder extends RecyclerView.ViewHolder
 {
 
-    private LinearLayout m_conversationBox;
+    private LinearLayout m_conversationBubble;
 
-    public ConversationViewHolder(@NonNull LinearLayout conversationBox)
+    public ConversationViewHolder(@NonNull LinearLayout conversationBubble)
     {
-        super(conversationBox);
-        m_conversationBox = conversationBox;
+        super(conversationBubble);
+        m_conversationBubble = conversationBubble;
     }
 
-    public LinearLayout getConversationBox()
+    public LinearLayout getConversationBubble()
     {
-        return m_conversationBox;
+        return m_conversationBubble;
     }
 
 }
