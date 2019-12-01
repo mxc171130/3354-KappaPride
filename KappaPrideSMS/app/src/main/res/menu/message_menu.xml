@@ -4,17 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/blacklist"
-            android:icon="@drawable/ic_blacklist"
-            android:title="@string/blacklist" />
-        <item
-            android:id="@+id/contacts"
-            android:icon="@drawable/ic_contacts"
-            android:title="@string/contacts" />
-    </group>
-
     <item
         android:id="@+id/app_bar_search"
         android:icon="@drawable/ic_search_black_24dp"
