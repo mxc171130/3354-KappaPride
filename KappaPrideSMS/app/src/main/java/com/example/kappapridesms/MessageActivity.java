@@ -1,8 +1,12 @@
 package com.example.kappapridesms;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +32,12 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, SentReceiver.OnFailedSendListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener
+public class MessageActivity extends AppCompatActivity implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, SentReceiver.OnFailedSendListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener, NavigationView.OnNavigationItemSelectedListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
@@ -54,6 +60,8 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     private boolean m_blacklistActive;
     private long m_blacklistContent;
     private BlacklistDialog m_blacklistDialog;
+
+    private DrawerLayout m_drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,8 +87,18 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         s_messageViewAdapter.setHasStableIds(true);
         messageRecyclerView.setAdapter(s_messageViewAdapter);
 
-        Toolbar mainTool = (Toolbar) findViewById(R.id.message_toolbar);
+        Toolbar mainTool = findViewById(R.id.message_toolbar);
         setSupportActionBar(mainTool);
+
+        m_drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, m_drawer, mainTool, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        m_drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
 
         SentReceiver contextRegisteredSentReceiver = new SentReceiver(this);
         IntentFilter sentReceiverFilter = new IntentFilter();
@@ -159,6 +177,29 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         instance.setTargetConversation(0);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.blacklist:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BlacklistFragment()).commit();
+                break;
+            case R.id.contacts:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ContactsFragment()).commit();
+                break;
+        }
+        m_drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (m_drawer.isDrawerOpen(GravityCompat.START)) {
+            m_drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+        super.onBackPressed();
+    }
 
     @Override
     protected void onResume()
