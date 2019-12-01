@@ -13,4 +13,5 @@
     <string name="search_bar">Search</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="list_is_empty">List is empty</string>
 </resources>

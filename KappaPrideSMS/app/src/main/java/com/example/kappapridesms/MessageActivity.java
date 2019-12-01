@@ -178,8 +178,10 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+    {
+        switch (menuItem.getItemId())
+        {
             case R.id.blacklist:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BlacklistFragment()).commit();
                 break;
@@ -192,10 +194,13 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     }
 
     @Override
-    public void onBackPressed() {
-        if (m_drawer.isDrawerOpen(GravityCompat.START)) {
+    public void onBackPressed()
+    {
+        if (m_drawer.isDrawerOpen(GravityCompat.START))
+        {
             m_drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else
+            {
             super.onBackPressed();
         }
         super.onBackPressed();
@@ -245,8 +250,8 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        MenuInflater inflator = getMenuInflater();
-        inflator.inflate(R.menu.message_menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.message_menu, menu);
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
