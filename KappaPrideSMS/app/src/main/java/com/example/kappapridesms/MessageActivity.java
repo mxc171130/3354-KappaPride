@@ -395,6 +395,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
                 RecyclerView recyclerView = (RecyclerView) v;
                 m_deleteView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
 
+                if(m_deleteView == null)
+                {
+                    m_deleteActive = false;
+                    return true;
+                }
+
                 m_warningDialog.show(getSupportFragmentManager(), "warning_dialog");
                 m_deleteActive = false;
             }
@@ -405,6 +411,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             {
                 RecyclerView recyclerView = (RecyclerView) v;
                 View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                if(childView == null)
+                {
+                    m_forwardActive = false;
+                    return true;
+                }
 
                 LinearLayout messageLayout = (LinearLayout) childView;
                 TextView messageView = (TextView) messageLayout.getChildAt(1);
@@ -421,6 +433,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             {
                 RecyclerView recyclerView = (RecyclerView) v;
                 View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                if(childView == null)
+                {
+                    m_addContactActive = false;
+                    return true;
+                }
 
                 LinearLayout messageLayout = (LinearLayout) childView;
                 TextView messageView = (TextView) messageLayout.getChildAt(0);
@@ -458,6 +476,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             {
                 RecyclerView recyclerView = (RecyclerView) v;
                 View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
+
+                if(childView == null)
+                {
+                    m_blacklistActive = false;
+                    return true;
+                }
 
                 LinearLayout messageLayout = (LinearLayout) childView;
                 TextView messageView = (TextView) messageLayout.getChildAt(0);
@@ -527,6 +551,11 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
     public void sendMessage(Conversation targetConversation, String messageContent)
     {
+        if(messageContent == null || messageContent.length() == 0)
+        {
+            return;
+        }
+
         long timestamp = new Date().getTime();
 
         targetConversation.addMessage(new Message(timestamp, true, messageContent));
