@@ -37,6 +37,13 @@ public class WarningDialog extends DialogFragment
     private String m_content = "Warning! You are about to delete your message.";
     private WarningDialogListener m_warningListener;
 
+    /**
+     * Public Interface that has two abstract methods:
+     * <p>
+     *     - onWarningPositiveClick()
+     *     - onWarningNegativeClick()
+     * </p>
+     */
     public interface WarningDialogListener
     {
         void onWarningPositiveClick();
@@ -56,6 +63,10 @@ public class WarningDialog extends DialogFragment
         super.onCreate(savedInstancesState);
     }
 
+    /**
+     * Called when a fragment is associated with its activity.
+     * @param context the context here is an activity
+     */
     @Override
     public void onAttach(Context context)
     {
@@ -65,7 +76,7 @@ public class WarningDialog extends DialogFragment
         {
             // Instantiate the NoticeDialogListener so we can send events to the host
             m_warningListener = (WarningDialogListener) context;
-        }catch(ClassCastException e)
+        } catch(ClassCastException e)
         {
             // Context does not implement ForwardDialogListener
             throw new ClassCastException("Context instance does not implement ForwardDialogListener");

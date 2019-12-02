@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.*;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,8 +21,11 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.List;
 import java.util.Iterator;
 
-public class ConversationActivity extends AppCompatActivity implements View.OnTouchListener
+public class ConversationActivity extends AppCompatActivity implements View.OnTouchListener, NavigationView.OnNavigationItemSelectedListener
 {
+    private DrawerLayout m_drawer;
+    private static ConversationViewAdapter s_conversationViewAdapter;
+
     //TODO
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,12 +36,30 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
         RecyclerView conversationRecyclerView = initializeRecyclerView();
         initializeLayoutManager(conversationRecyclerView);
 
-
         // Need to TEST
         // switching between the two activities
         configureMessageActivity();
 
+        initializeNavigationView();
 
+        initializeViewAdapter(conversationRecyclerView);
+
+
+    }
+
+    private RecyclerView initializeRecyclerView()
+    {
+        RecyclerView conversationRecyclerView = (RecyclerView) findViewById(R.id.conversation_recycler);
+        conversationRecyclerView.setOnTouchListener(this);
+        conversationRecyclerView.setNestedScrollingEnabled(true);
+        conversationRecyclerView.setHasFixedSize(true);
+        return conversationRecyclerView;
+    }
+
+    private void initializeLayoutManager(RecyclerView conversationRecyclerView)
+    {
+        LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
+        conversationRecyclerView.setLayoutManager(myRecyclerLinearLayout);
     }
 
     // code that will take us to the Message activity
@@ -54,20 +75,21 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
 
     }
 
-    private void initializeLayoutManager(RecyclerView conversationRecyclerView) {
-        LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
-        conversationRecyclerView.setLayoutManager(myRecyclerLinearLayout);
+    private void initializeNavigationView()
+    {
+        m_drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private RecyclerView initializeRecyclerView() {
-        RecyclerView conversationRecyclerView = (RecyclerView) findViewById(R.id.conversation_recycler);
-        conversationRecyclerView.setOnTouchListener(this);
-        conversationRecyclerView.setNestedScrollingEnabled(true);
-        conversationRecyclerView.setHasFixedSize(true);
-        return conversationRecyclerView;
+    private void initializeViewAdapter(RecyclerView conversationRecyclerView) {
+        s_conversationViewAdapter = new ConversationViewAdapter();
+        s_conversationViewAdapter.setHasStableIds(true);
+        conversationRecyclerView.setAdapter(s_conversationViewAdapter);
     }
 
 
+    //TODO
     /**
      * Called when a touch event is dispatched to a view. This allows listeners to
      * get a chance to respond before the target view.
@@ -79,6 +101,12 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    //TODO
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         return false;
     }
 }
