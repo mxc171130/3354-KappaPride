@@ -24,6 +24,7 @@ import java.util.Iterator;
 public class ConversationActivity extends AppCompatActivity implements View.OnTouchListener, NavigationView.OnNavigationItemSelectedListener
 {
     private DrawerLayout m_drawer;
+
     private static ConversationViewAdapter s_conversationViewAdapter;
 
     //TODO
@@ -88,6 +89,13 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
         conversationRecyclerView.setAdapter(s_conversationViewAdapter);
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        ConversationRepository.getInstance().loadConversations();
+        s_conversationViewAdapter.notifyDataSetChanged();
+    }
 
     //TODO
     /**
@@ -106,7 +114,18 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
 
     //TODO
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+    {
         return false;
     }
+
+
+    public static ConversationViewAdapter getConversationViewAdapter()
+    {
+        return s_conversationViewAdapter;
+    }
+
+
+
+
 }
