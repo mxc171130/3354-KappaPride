@@ -124,11 +124,13 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
 
 
     private void setUpPermissions() {
-        boolean[] perms = new boolean[4];
+        boolean[] perms = new boolean[6];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[1] = checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[2] = checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
         perms[3] = checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+        perms[4] = checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+        perms[5] = checkSelfPermission(Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED;
 
         int numbPerms = 0;
 
@@ -165,6 +167,16 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         {
             requestPermissions[requestPointer] = Manifest.permission.READ_SMS;
             requestPointer++;
+        }
+
+        if(!perms[4])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.READ_CONTACTS;
+        }
+
+        if(!perms[5])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.WRITE_CONTACTS;
         }
 
         if(numbPerms != 0)
