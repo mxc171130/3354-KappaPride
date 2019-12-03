@@ -14,6 +14,9 @@
         android:id="@+id/message_contact"
         android:title="@string/message_contact" />
     <item
+        android:id="@+id/message_delete_contact"
+        android:title="@string/message_delete_contact"/>
+    <item
         android:id="@+id/message_blacklist"
         android:title="@string/message_blacklist" />
     <item
