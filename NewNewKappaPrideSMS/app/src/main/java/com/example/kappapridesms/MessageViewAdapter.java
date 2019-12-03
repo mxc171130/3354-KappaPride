@@ -1,14 +1,10 @@
 package com.example.kappapridesms;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.selection.ItemDetailsLookup;
-import androidx.recyclerview.selection.StableIdKeyProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>

@@ -75,7 +75,7 @@ public class WarningDialog extends DialogFragment
         try
         {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            m_warningListener = (WarningDialogListener) context;
+            m_warningListener = ((MessageActivity) context).getMessageFragment();
         } catch(ClassCastException e)
         {
             // Context does not implement ForwardDialogListener

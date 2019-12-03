@@ -37,7 +37,7 @@ public class BlacklistDialog extends DialogFragment
         try
         {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            m_blacklistListener = (BlacklistDialog.BlacklistDialogListener) context;
+            m_blacklistListener = ((MessageActivity) context).getMessageFragment();
         }catch(ClassCastException e)
         {
             // Context does not implement ForwardDialogListener

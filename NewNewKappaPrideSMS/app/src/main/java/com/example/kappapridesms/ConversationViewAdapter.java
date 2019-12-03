@@ -1,12 +1,14 @@
 package com.example.kappapridesms;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationViewHolder>
 {
@@ -21,7 +23,7 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
      * layout file.
      * <p>
      * The new ViewHolder will be used to display items of the adapter using
-     * {@link #onBindViewHolder(ViewHolder, int, List)}. Since it will be re-used to display
+     * {@link #onBindViewHolder(ConversationViewHolder, int)}. Since it will be re-used to display
      * different items in the data set, it is a good idea to cache references to sub views of
      * the View to avoid unnecessary {@link View#findViewById(int)} calls.
      *
@@ -30,7 +32,7 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
      * @param viewType The view type of the new View.
      * @return A new ViewHolder that holds a View of the given view type.
      * @see #getItemViewType(int)
-     * @see #onBindViewHolder(ViewHolder, int)
+     * @see #onBindViewHolder(ConversationViewHolder, int)
      */
     @NonNull
     @Override
@@ -54,7 +56,7 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
      * on (e.g. in a click listener), use {@link ViewHolder#getAdapterPosition()} which will
      * have the updated adapter position.
      * <p>
-     * Override {@link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
+     * Override {@link #onBindViewHolder(ConversationViewHolder, int)} instead if Adapter can
      * handle efficient partial bind.
      *
      * @param holder   The ViewHolder which should be updated to represent the contents of the
