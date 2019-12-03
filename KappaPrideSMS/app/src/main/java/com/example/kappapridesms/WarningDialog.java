@@ -63,23 +63,6 @@ public class WarningDialog extends DialogFragment
         super.onCreate(savedInstancesState);
     }
 
-    @Override
-    public void onAttach(Context context)
-    {
-        super.onAttach(context);
-
-        try
-        {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            m_warningListener = (WarningDialogListener) context;
-        }catch(ClassCastException e)
-        {
-            // Context does not implement ForwardDialogListener
-            throw new ClassCastException("Context instance does not implement ForwardDialogListener");
-        }
-    }
-
-
     /**
      * Called when a fragment is associated with its activity.
      * @param context the context here is an activity
