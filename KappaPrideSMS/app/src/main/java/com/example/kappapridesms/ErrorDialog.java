@@ -32,6 +32,7 @@ public class ErrorDialog extends DialogFragment
      *
      * @return frag the error dialog fragment
      */
+
     public static ErrorDialog newInstance()
     {
         ErrorDialog frag = new ErrorDialog();

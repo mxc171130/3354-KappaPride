@@ -73,6 +73,7 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
         initializeLayoutManager(messageRecyclerView);
 
+
         initializeDialogs();
 
         initializeViewAdapter(messageRecyclerView);
@@ -247,9 +248,12 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
 
     @Override
     public void onBackPressed() {
-        if (m_drawer.isDrawerOpen(GravityCompat.START)) {
+        if (m_drawer.isDrawerOpen(GravityCompat.START)) 
+        {
             m_drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } 
+        else 
+        {
             super.onBackPressed();
         }
         super.onBackPressed();
@@ -299,8 +303,8 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        MenuInflater inflator = getMenuInflater();
-        inflator.inflate(R.menu.message_menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.message_menu, menu);
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -487,7 +491,6 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
             {
                 RecyclerView recyclerView = (RecyclerView) v;
                 View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
-
                 if(childView == null)
                 {
                     m_addContactActive = false;

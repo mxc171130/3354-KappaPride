@@ -108,7 +108,8 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
      * @return True if the listener has consumed the event, false otherwise.
      */
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent event) 
+    {
         return false;
     }
 
@@ -124,8 +125,4 @@ public class ConversationActivity extends AppCompatActivity implements View.OnTo
     {
         return s_conversationViewAdapter;
     }
-
-
-
-
 }
