@@ -6,7 +6,8 @@
     <string name="message_hint">Enter your message here</string>
     <string name="message_delete">Delete Message</string>
     <string name="message_forward">Forward Message</string>
-    <string name="message_contact">Add Contact</string>
+    <string name="message_contact">Add/Edit Contact</string>
+    <string name="message_delete_contact">Delete Contact</string>
     <string name="message_blacklist">Blacklist Number</string>
     <string name="blacklist">Blacklist</string>
     <string name="contacts">Contacts</string>
