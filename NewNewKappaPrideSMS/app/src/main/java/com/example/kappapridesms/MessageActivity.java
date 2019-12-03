@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -633,48 +634,3 @@ public class MessageActivity extends AppCompatActivity implements ForwardDialog.
         return s_messageViewAdapter;
     }
 }
-
-/*
-package com.example.dialog;
-
-        import androidx.appcompat.app.AlertDialog;
-        import androidx.appcompat.app.AppCompatActivity;
-
-        import android.content.DialogInterface;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.Button;
-
-public class MessageActivity extends AppCompatActivity {
-    private Button alertBtn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        onButtonClickListener();
-
-    }
-    public void onButtonClickListener()
-    {   final ErrorDialog errorDialog=new ErrorDialog();
-        alertBtn=findViewById(R.id.alertBtn);
-        alertBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder warning= new AlertDialog.Builder(MessageActivity.this);
-                warning.setMessage(errorDialog.getContent())
-                        .setCancelable(false)
-                        .setPositiveButton("Close app", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        });
-                AlertDialog alertDialog=warning.create();
-                alertDialog.show();
-
-            }
-        });
-    }
-
-}*/
