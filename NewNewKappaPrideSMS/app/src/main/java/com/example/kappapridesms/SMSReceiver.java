@@ -25,14 +25,35 @@ public class SMSReceiver extends BroadcastReceiver
 {
     public static final String NOTIFICATION = "kappa_notification";
 
+    /**
+     *
+     * @param context
+     * @param intent the intent is the SMS message that will be sent
+     *This program runs in the background and whenever a message is sent to the phone it gets called.
+     *The program then checks to see if the number is black listed,if not then the phone will get the message
+     * and the phone will send the user a notification
+     *
+     *
+     */
+
     @Override
     public void onReceive(Context context, Intent intent)
-    {
+    {   String recieveContact="";
+        /**
+        Checks to see if the intent being sent is a SMS message
+         */
         if(intent.getAction().equals(SMS_RECEIVED_ACTION))
-        {
+        {   /**
+            The message is then placed in an array of SMSmessage,as well as the blacklist numbers
+            */
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
+            ContactManager contactManager=instance.getContactManager();
+            /**
+            for each message the phone will check the date,if the message is self sent
+             and the actual message itself
+             */
 
             boolean shouldNotify = true;
 
@@ -49,9 +70,17 @@ public class SMSReceiver extends BroadcastReceiver
                 {
                     senderPhoneNumber = "1" + senderPhoneNumber;
                 }
-
+                /**
+                converts number into Long
+                 */
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
-
+                if(!contactManager.getContact(senderPhoneNumberLong).getName().contains("DNE"))
+                {
+                    recieveContact=contactManager.getContact(senderPhoneNumberLong).getName();
+                }
+                /**
+                Checks to see if the phone number is blacklisted
+                 */
                 for(int i = 0; i < blacklist.size(); i++)
                 {
                     if(senderPhoneNumberLong == blacklist.getBlacklistedContact(i))
@@ -60,7 +89,9 @@ public class SMSReceiver extends BroadcastReceiver
                         continue nextMessage;
                     }
                 }
-
+                /**
+                Places the message in the conversation
+                 */
                 for(Conversation insertConversation : instance.getConversations())
                 {
                     if(insertConversation.getRecipientPhone() == senderPhoneNumberLong)
@@ -70,12 +101,16 @@ public class SMSReceiver extends BroadcastReceiver
                     }
                 }
 
-                // No conversation detected, create a new one and add the message to it
+                /**
+                 No conversation detected, create a new one and add the message to it
+                 */
                 Conversation newConversation = new Conversation(senderPhoneNumberLong);
                 instance.addConversation(newConversation);
                 newConversation.addMessage(receivedMessage);
             }
-
+            /**
+            Saves Conversation in phones memory
+             */
             FileSystem.getInstance().saveConversations(instance.getConversations());
 
             if(shouldNotify)
