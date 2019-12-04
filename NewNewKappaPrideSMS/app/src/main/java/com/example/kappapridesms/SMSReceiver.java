@@ -32,19 +32,28 @@ public class SMSReceiver extends BroadcastReceiver
      *This program runs in the background and whenever a message is sent to the phone it gets called.
      *The program then checks to see if the number is black listed,if not then the phone will get the message
      * and the phone will send the user a notification
+     *
+     * @author Alazar Debello
      */
 
     @Override
     public void onReceive(Context context, Intent intent)
     {   String userNumber="";
-        //Checks to see if the intent being sent is a SMS message
+        /**
+        Checks to see if the intent being sent is a SMS message
+         */
         if(intent.getAction().equals(SMS_RECEIVED_ACTION))
-        {   //The message is then placed in an array of SMSmessage,as well as the blacklist numbers
+        {   /**
+            The message is then placed in an array of SMSmessage,as well as the blacklist numbers
+            */
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
-            //for each message the phone will check the date,if the message is self sent
-            //and the actual message itself
+            /**
+            for each message the phone will check the date,if the message is self sent
+             and the actual message itself
+             */
+
             nextMessage:
             for(SmsMessage message : messages)
             {
@@ -52,14 +61,20 @@ public class SMSReceiver extends BroadcastReceiver
 
                 String senderPhoneNumber = message.getOriginatingAddress();
                 userNumber=senderPhoneNumber;
-                //Checks if the phonenumber is of valid length
+                /**
+                Checks if the phonenumber is of valid length
+                 */
                 if(senderPhoneNumber.length() == 10)
                 {
                     senderPhoneNumber = "1" + senderPhoneNumber;
                 }
-                //converts number into Long
+                /**
+                converts number into Long
+                 */
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
-                //Checks to see if the phone number is blacklisted
+                /**
+                Checks to see if the phone number is blacklisted
+                 */
                 for(int i = 0; i < blacklist.size(); i++)
                 {
                     if(senderPhoneNumberLong == blacklist.getBlacklistedContact(i).getPhoneNumber())
@@ -67,7 +82,9 @@ public class SMSReceiver extends BroadcastReceiver
                         continue nextMessage;
                     }
                 }
-                //Places the message in the conversation
+                /**
+                Places the message in the conversation
+                 */
                 for(Conversation insertConversation : instance.getConversations())
                 {
                     if(insertConversation.getRecipientPhone() == senderPhoneNumberLong)
@@ -77,23 +94,33 @@ public class SMSReceiver extends BroadcastReceiver
                     }
                 }
 
-                // No conversation detected, create a new one and add the message to it
+                /**
+                 No conversation detected, create a new one and add the message to it
+                 */
                 Conversation newConversation = new Conversation(senderPhoneNumberLong);
                 instance.addConversation(newConversation);
                 newConversation.addMessage(receivedMessage);
             }
-            //Saves Conversation in phones memory
+            /**
+            Saves Conversation in phones memory
+             */
             FileSystem.getInstance().saveConversations(instance.getConversations());
-            //Creating Notification
+            /**
+            Creating Notification
+             */
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            {    //First Creating Notifcation Channel
+            {    /**
+                    First Creating Notifcation Channel
+                */
                 NotificationManager m_manger = context.getSystemService(NotificationManager.class);
 
                 NotificationChannel popUp = new NotificationChannel(NOTIFICATION, "popUp", NotificationManager.IMPORTANCE_DEFAULT);
                 popUp.setDescription("SMS notification");
                 m_manger.createNotificationChannel(popUp);
             }
-            //Places the settings for the notification
+            /**
+            Places the settings for the notification
+             */
             Notification m_notification= new NotificationCompat.Builder(context, NOTIFICATION)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setContentTitle(userNumber)
@@ -103,7 +130,9 @@ public class SMSReceiver extends BroadcastReceiver
                     .setChannelId(NOTIFICATION)
                     .setAutoCancel(true)
                     .build();
-            //Displays Notification
+            /**
+             * Displays Notification
+             */
             NotificationManagerCompat displayManager = NotificationManagerCompat.from(context);
             displayManager.notify(15234,m_notification);
         }

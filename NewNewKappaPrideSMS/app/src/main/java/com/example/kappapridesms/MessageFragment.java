@@ -31,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class MessageFragment extends Fragment implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener
 {
     private View m_fragView;
