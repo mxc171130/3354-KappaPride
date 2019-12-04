@@ -2,10 +2,6 @@ package com.example.kappapridesms;
 
 import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.ContentProvider;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,12 +38,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     private ForwardDialog m_forwardDialog;
 
     private ErrorDialog m_errorDialog;
-
-    private boolean m_addContactActive;
-    private long m_addContactContent;
-
-    private boolean m_deleteContactActive;
-    private boolean m_searchContact;
 
     private boolean m_blacklistActive;
     private long m_blacklistContent;
@@ -348,57 +338,4 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     {
         return s_messageViewAdapter;
     }
-
-    /*
-    public static void deleteContact(ContentResolver contact, String number)
-    {
-        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        String[] args = new String[] {String.valueOf(getContactID(contact, number))};
-        operations.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
-        try
-        {
-            contact.applyBatch(ContactsContract.AUTHORITY, operations);
-        }
-        catch(RemoteException e)
-        {
-            e.printStackTrace();
-        }
-        catch(OperationApplicationException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    */
-
-    /*
-    private static long getContactID(ContentResolver contact, String number)
-    {
-        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        String[] list = {ContactsContract.PhoneLookup._ID};
-        Cursor cursor = null;
-        try
-        {
-            cursor = contact.query(contactUri, list, null, null, null);
-            if(cursor.moveToFirst())
-            {
-                int personID = cursor.getColumnIndex(ContactsContract.PhoneLookup._ID);
-                return cursor.getLong(personID);
-            }
-            return -1;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if(cursor != null)
-            {
-                cursor.close();
-                cursor = null;
-            }
-        }
-        return -1;
-    }
-    */
 }

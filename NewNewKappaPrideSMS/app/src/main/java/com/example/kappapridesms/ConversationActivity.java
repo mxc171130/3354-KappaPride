@@ -9,18 +9,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.navigation.NavigationView;
-
 import java.util.ArrayList;
 
-public class ConversationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ConversationDialog.ConversationDialogListener
+public class ConversationActivity extends AppCompatActivity implements ConversationDialog.ConversationDialogListener
 {
     private static ConversationViewAdapter s_conversationViewAdapter;
     public static final int PERM_REQUEST_CODE = 227;
@@ -157,13 +154,6 @@ public class ConversationActivity extends AppCompatActivity implements Navigatio
         inflater.inflate(R.menu.conversation_menu, menu);
 
         return true;
-    }
-
-    //TODO
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
-    {
-        return false;
     }
 
 

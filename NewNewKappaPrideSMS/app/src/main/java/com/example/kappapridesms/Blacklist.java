@@ -1,7 +1,6 @@
 package com.example.kappapridesms;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Manages the blacklisted contacts. It allows for the addition and removal of contacts, as well as, changing, loading, and getting the blacklist; you can also get the size of the blacklist.
@@ -45,11 +44,6 @@ public class Blacklist
      * This is the list of blacklisted contacts
      */
     private ArrayList<Long> m_blacklistedNumbers = new ArrayList<Long>();
-
-    /**
-     * This is used to keep track of the size of the blacklist, with an initial value of zero.
-     */
-    private int m_size = 0;
 
     /**
      * Method that adds a preexisting contact to the blacklist

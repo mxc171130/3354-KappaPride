@@ -2,7 +2,6 @@ package com.example.kappapridesms;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -76,7 +75,8 @@ public class MessageActivity extends AppCompatActivity implements SentReceiver.O
         return m_messageFragment;
     }
 
-    private void setUpPermissions() {
+    private void setUpPermissions()
+    {
         boolean[] perms = new boolean[6];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[1] = checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;

@@ -85,20 +85,6 @@ public class WarningDialog extends DialogFragment
 
 
     /**
-     * Creates a new instance of a WarningDialog fragment
-     * @param title title of WarningDialog fragment
-     * @return frag WarningDialog fragment
-     */
-    public static WarningDialog newInstance(String title)
-    {
-        WarningDialog frag = new WarningDialog();
-        Bundle args = new Bundle();
-        args.putString("Title",title);
-        frag.setArguments(args);
-        return frag;
-    }
-
-    /**
      * Creates the dialog so that the user gets a warning before
      * they delete a message. Allows the user to cancel deleting
      * the message as well.

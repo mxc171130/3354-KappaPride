@@ -1,6 +1,5 @@
 package com.example.kappapridesms;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,9 +125,6 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
                 }
             }
         });
-
-        // must be able to go to a conversation that is selected.
-        // It then goes to MessageActivity view
     }
 
 

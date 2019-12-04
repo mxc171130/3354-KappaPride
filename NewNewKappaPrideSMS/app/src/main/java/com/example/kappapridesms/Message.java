@@ -1,6 +1,5 @@
 package com.example.kappapridesms;
 import java.util.Date;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -113,6 +112,4 @@ public class Message
         String time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(new Date(m_timestamp));
         return time;
     }
-
-
 }

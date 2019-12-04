@@ -22,7 +22,7 @@ public class BlacklistDialog extends DialogFragment
     /**
      * The content to be displayed upon inflation of the BlacklistDialog.
      */
-    private String content = "Blacklist this number?";
+    private String m_content = "Blacklist this number?";
 
     /**
      * The listener subscribed to this BlacklistDialog's onClick events.
@@ -85,7 +85,7 @@ public class BlacklistDialog extends DialogFragment
         AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
 
         // Set the dialog message, title, and onClick actions
-        builder.setTitle("Blacklist").setMessage(content).setPositiveButton("Blacklist", new DialogInterface.OnClickListener()
+        builder.setTitle("Blacklist").setMessage(m_content).setPositiveButton("Blacklist", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)

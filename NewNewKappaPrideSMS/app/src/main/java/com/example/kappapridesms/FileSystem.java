@@ -22,7 +22,7 @@ public class FileSystem
     /**
      * The sole instance of FileSystem
      */
-    private static FileSystem instance = new FileSystem();
+    private static FileSystem m_instance = new FileSystem();
 
     /**
      * Returns the sole instance of FileSystem
@@ -31,7 +31,7 @@ public class FileSystem
      */
     public static FileSystem getInstance()
     {
-        return instance;
+        return m_instance;
     }
 
     /**

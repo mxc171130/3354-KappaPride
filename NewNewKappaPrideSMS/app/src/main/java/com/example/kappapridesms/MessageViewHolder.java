@@ -1,6 +1,5 @@
 package com.example.kappapridesms;
 
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;

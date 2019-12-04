@@ -27,21 +27,6 @@ public class ErrorDialog extends DialogFragment
     private String m_content = "Message cannot be sent";
 
     /**
-     *  Creates an ErrorDialog fragment, sets arguments for the
-     *  fragment and then returns it.
-     *
-     * @return frag the error dialog fragment
-     */
-
-    public static ErrorDialog newInstance()
-    {
-        ErrorDialog frag = new ErrorDialog();
-        Bundle args= new Bundle();
-        frag.setArguments(args);
-        return frag;
-    }
-
-    /**
      * Creates the dialog so that the user is notified when
      * there is an error. Allows the user to dismiss the
      * error as well.
