@@ -80,15 +80,16 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
         }
 
         Long recipientPhone = conversation.getRecipientPhone();
-        Contact possibleContact = instance.getContactManager().getContact(recipientPhone);
 
-        if(!possibleContact.getName().equals("DNE"))
+        String name = ConversationRepository.getInstance().getContactName("" + recipientPhone, KappaApplication.getAppContext());
+
+        if(name == null || name.length() == 0)
         {
-            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(possibleContact.getName());
+            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(recipientPhone.toString());
         }
         else
         {
-            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(recipientPhone.toString());
+            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(name);
         }
 
         holder.getConversationBubble().setOnClickListener(new View.OnClickListener() {
@@ -99,9 +100,8 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
                 TextView messageView = (TextView) messageLayout.getChildAt(0);
                 String content = messageView.getText().toString();
                 ConversationRepository instance = ConversationRepository.getInstance();
-                ContactManager contactManager = instance.getContactManager();
 
-                long phoneNumber = contactManager.getNumberFromName(content);
+                long phoneNumber = instance.getPhoneNumber(content, KappaApplication.getAppContext());
 
                 if(phoneNumber == 0)
                 {

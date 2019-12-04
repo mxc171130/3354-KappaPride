@@ -34,11 +34,6 @@ public class ConversationRepository
     private Conversation m_targetConversation;
 
     /**
-     * The manager for all the contacts, holding all the contact data
-     */
-    private ContactManager m_contactManager;
-
-    /**
      * The blacklist, holding all blacklisted contacts
      */
     private Blacklist m_blacklist;
@@ -85,17 +80,6 @@ public class ConversationRepository
     public ArrayList<Conversation> getConversations()
     {
         return m_conversations;
-    }
-
-
-    /**
-     * Retrieves the ContactManager of this ConversationRepository
-     *
-     * @return The ContactManager of this ConversationRepository
-     */
-    public ContactManager getContactManager()
-    {
-        return m_contactManager;
     }
 
 
@@ -154,7 +138,6 @@ public class ConversationRepository
     private ConversationRepository()
     {
         m_conversations = new ArrayList<Conversation>();
-        m_contactManager = new ContactManager();
         m_blacklist = new Blacklist();
         m_targetConversation = new Conversation(0);
     }
@@ -180,4 +163,47 @@ public class ConversationRepository
         return contactName;
     }
 
+    public Long getPhoneNumber(final String name, Context context)
+    {
+        String number="";
+
+
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+        Cursor people = context.getContentResolver().query(uri, projection, null, null, null);
+
+        int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+        int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+        people.moveToFirst();
+
+        do
+        {
+            String perName = people.getString(indexName);
+            String perNumber = people.getString(indexNumber);
+
+            if(perName.equalsIgnoreCase(name))
+            {
+                perNumber = perNumber.replace(" ", "");
+                perNumber = perNumber.replace("(", "");
+                perNumber = perNumber.replace(")", "");
+                perNumber = perNumber.replace("-", "");
+                perNumber = "1" + perNumber;
+                return Long.parseLong(perNumber);
+            }
+        } while (people.moveToNext());
+
+
+        if(!number.equalsIgnoreCase(""))
+        {
+            number = number.replace(" ", "");
+            number = number.replace("(", "");
+            number = number.replace(")", "");
+            number = number.replace("-", "");
+            number = "1" + number;
+            return Long.parseLong(number);
+        }
+        else return 0L;
+    }
 }

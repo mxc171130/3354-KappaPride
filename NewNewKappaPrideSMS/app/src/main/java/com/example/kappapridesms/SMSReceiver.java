@@ -34,12 +34,16 @@ public class SMSReceiver extends BroadcastReceiver
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
 
+            boolean shouldNotify = true;
+
+            String senderPhoneNumber = "";
+
             nextMessage:
             for(SmsMessage message : messages)
             {
                 Message receivedMessage = new Message(new Date().getTime(), false, message.getMessageBody());
 
-                String senderPhoneNumber = message.getOriginatingAddress();
+                senderPhoneNumber = message.getOriginatingAddress();
 
                 if(senderPhoneNumber.length() == 10)
                 {
@@ -50,8 +54,9 @@ public class SMSReceiver extends BroadcastReceiver
 
                 for(int i = 0; i < blacklist.size(); i++)
                 {
-                    if(senderPhoneNumberLong == blacklist.getBlacklistedContact(i).getPhoneNumber())
+                    if(senderPhoneNumberLong == blacklist.getBlacklistedContact(i))
                     {
+                        shouldNotify = false;
                         continue nextMessage;
                     }
                 }
@@ -73,27 +78,37 @@ public class SMSReceiver extends BroadcastReceiver
 
             FileSystem.getInstance().saveConversations(instance.getConversations());
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            if(shouldNotify)
             {
-                NotificationManager m_manger = context.getSystemService(NotificationManager.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    NotificationManager m_manger = context.getSystemService(NotificationManager.class);
 
-                NotificationChannel popUp = new NotificationChannel(NOTIFICATION, "popUp", NotificationManager.IMPORTANCE_DEFAULT);
-                popUp.setDescription("SMS notification");
-                m_manger.createNotificationChannel(popUp);
+                    NotificationChannel popUp = new NotificationChannel(NOTIFICATION, "popUp", NotificationManager.IMPORTANCE_DEFAULT);
+                    popUp.setDescription("SMS notification");
+                    m_manger.createNotificationChannel(popUp);
+                }
+
+                String potentialName = instance.getContactName(senderPhoneNumber, KappaApplication.getAppContext());
+
+                if(potentialName == null || potentialName.length() == 0)
+                {
+                    potentialName = senderPhoneNumber;
+                }
+
+                Notification m_notification = new NotificationCompat.Builder(context, NOTIFICATION)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle("Message Received")
+                        .setContentText(potentialName + " has sent you a message")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                        .setChannelId(NOTIFICATION)
+                        .setAutoCancel(true)
+                        .build();
+
+                NotificationManagerCompat displayManager = NotificationManagerCompat.from(context);
+                displayManager.notify(15234, m_notification);
             }
-
-            Notification m_notification= new NotificationCompat.Builder(context, NOTIFICATION)
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentTitle("Message")
-                    .setContentText("Has sent you a message")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .setChannelId(NOTIFICATION)
-                    .setAutoCancel(true)
-                    .build();
-
-            NotificationManagerCompat displayManager = NotificationManagerCompat.from(context);
-            displayManager.notify(15234,m_notification);
         }
 
         if(MessageFragment.getMessageViewAdapter() != null)

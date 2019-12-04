@@ -44,7 +44,7 @@ public class Blacklist
     /**
      * This is the list of blacklisted contacts
      */
-    private ArrayList<Contact> m_blacklistedContacts = new ArrayList<Contact>();
+    private ArrayList<Long> m_blacklistedNumbers = new ArrayList<Long>();
 
     /**
      * This is used to keep track of the size of the blacklist, with an initial value of zero.
@@ -56,9 +56,9 @@ public class Blacklist
      *
      * @param blContact the contact to be blacklisted
      */
-    public void addBlacklistedContact(Contact blContact)
+    public void addBlacklistedNumber(Long blContact)
     {
-        m_blacklistedContacts.add(blContact);
+        m_blacklistedNumbers.add(blContact);
     }
 
     /**
@@ -66,32 +66,14 @@ public class Blacklist
      *
      * @param blContact the contact that is to be removed from the blacklist
      */
-    public void removeBlacklistedContact(Contact blContact)
+    public void removeBlacklistedNumber(Long blContact)
     {
-        for(Iterator<Contact> iterator = m_blacklistedContacts.listIterator(); iterator.hasNext(); )
+        for(Iterator<Long> iterator = m_blacklistedNumbers.listIterator(); iterator.hasNext(); )
         {
-            Contact contact = iterator.next();
+            Long contact = iterator.next();
             if(contact.equals(blContact))
             {
                 iterator.remove();
-            }
-        }
-    }
-
-    /**
-     * Method that changes the existing blacklisted contact's number to a new number
-     *
-     * @param blContact contact whos number is to be changed
-     * @param newNumber the new number of the blacklisted contact
-     */
-    public void changeBlacklistedContact(Contact blContact, long newNumber)
-    {
-        for(Iterator<Contact> iterator = m_blacklistedContacts.listIterator(); iterator.hasNext(); )
-        {
-            Contact tempContact = iterator.next();
-            if(tempContact.equals(blContact))
-            {
-                tempContact.setPhoneNumber(newNumber);
             }
         }
     }
@@ -101,15 +83,7 @@ public class Blacklist
      */
     public int size()
     {
-        return m_blacklistedContacts.size();
-    }
-
-    /**
-     *
-     */
-    public void loadBlacklist()
-    {
-        // Not really sure what you want this method to do.
+        return m_blacklistedNumbers.size();
     }
 
     /**
@@ -117,8 +91,8 @@ public class Blacklist
      *
      * @param index position of the contact to be retrieved
      */
-    public Contact getBlacklistedContact(int index)
+    public Long getBlacklistedContact(int index)
     {
-        return m_blacklistedContacts.get(index);
+        return m_blacklistedNumbers.get(index);
     }
 }

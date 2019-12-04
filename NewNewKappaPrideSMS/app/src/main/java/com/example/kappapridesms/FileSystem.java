@@ -77,46 +77,6 @@ public class FileSystem
         return null;
     }
 
-    /**
-     * Loads all contacts saved to the file system into the passed ContactManager.
-     *
-     * @param contactManager The ContactManager in which to load the contacts
-     */
-    public void loadContacts(ContactManager contactManager)
-    {
-        try
-        {
-            // Get the path of this application's data
-            Context applicationContext = KappaApplication.getAppContext();
-            StringBuilder pathBuilder = new StringBuilder();
-
-            // Begin building the path to the contacts file
-            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/contacts");
-
-            // Create the file to open the contacts file
-            File contactsFile = new File(pathBuilder.toString());
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(contactsFile)));
-            String line;
-
-            // Read the number and contact information until the end of file
-            while((line = bufferedReader.readLine()) != null)
-            {
-                long number = Long.parseLong(line);
-                line = bufferedReader.readLine();
-
-                // Add the contact to the contact manager
-                contactManager.addContact(number, line);
-            }
-
-            bufferedReader.close();
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * Loads the conversations present in the file system into the passed ArrayList.
@@ -284,43 +244,6 @@ public class FileSystem
         }
     }
 
-    /**
-     * Saves the passed ArrayList of contacts to the file system.
-     *
-     * @param contacts The ArrayList of contacts to be saved
-     */
-    public void saveContacts(ArrayList<Contact> contacts)
-    {
-        try
-        {
-            // Get the root path of this application's data
-            Context applicationContext = KappaApplication.getAppContext();
-            StringBuilder pathBuilder = new StringBuilder();
-
-            // Construct the contacts path
-            pathBuilder.append(applicationContext.getFilesDir().getCanonicalPath());
-            pathBuilder.append("/contacts/contacts");
-
-            File contactsFile = new File(pathBuilder.toString());
-
-            PrintWriter printWriter = new PrintWriter(contactsFile);
-
-            // Write each contact into the file
-            for(int i = 0; i < contacts.size(); i++)
-            {
-                Contact saveContact = contacts.get(i);
-
-                printWriter.println(saveContact.getPhoneNumber());
-                printWriter.println(saveContact.getName());
-            }
-
-            printWriter.close();
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * Saves the blacklisted numbers to the file system.
@@ -346,9 +269,7 @@ public class FileSystem
             // Write the blacklisted numbers to the file system
             for(int i = 0; i < blacklist.size(); i++)
             {
-                Contact saveNumberFromContact = blacklist.getBlacklistedContact(i);
-
-                printWriter.println(saveNumberFromContact.getPhoneNumber());
+                printWriter.println(blacklist.getBlacklistedContact(i));
             }
 
             printWriter.close();

@@ -22,12 +22,9 @@ public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
     {
         ConversationRepository instance = ConversationRepository.getInstance();
         Conversation targetConversation = instance.getTargetConversation();
-        ContactManager contactManager = instance.getContactManager();
 
         long authorPhone = targetConversation.getRecipientPhone();
         Message selectedMessage = targetConversation.getMessage(pos);
-        Contact authorContact = contactManager.getContact(authorPhone);
-
 
         if(selectedMessage.isSentFromThisPhone())
         {

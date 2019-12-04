@@ -1,10 +1,7 @@
 package com.example.kappapridesms;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,23 +16,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
 
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-public class MessageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SentReceiver.OnFailedSendListener
+public class MessageActivity extends AppCompatActivity implements SentReceiver.OnFailedSendListener
 {
     public static final int PERM_REQUEST_CODE = 227;
 
     private MessageFragment m_messageFragment;
 
-    private DrawerLayout m_drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,10 +42,10 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         m_messageFragment = new MessageFragment();
 
         fragmentTransaction.replace(R.id.fragment_container, m_messageFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         Toolbar mainTool = initializeToolBar();
+        getWindow().setStatusBarColor(getColor(R.color.colorPrimaryDark));
 
         SentReceiver contextRegisteredSentReceiver = new SentReceiver(this);
         IntentFilter sentReceiverFilter = new IntentFilter();
@@ -63,11 +56,9 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         setUpPermissions();
 
         ConversationRepository instance = ConversationRepository.getInstance();
-        ContactManager contactManager = instance.getContactManager();
         Blacklist blacklist = instance.getBlacklist();
 
         FileSystem fileSystem = FileSystem.getInstance();
-        fileSystem.loadContacts(instance.getContactManager());
 
         ArrayList<Long> blacklistedNumbers = fileSystem.loadBlacklistNumbers();
 
@@ -75,7 +66,7 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         {
             for (Long blacklistedNumber : blacklistedNumbers)
             {
-                blacklist.addBlacklistedContact(contactManager.getContact(blacklistedNumber));
+                blacklist.addBlacklistedNumber(blacklistedNumber);
             }
         }
     }
@@ -86,11 +77,13 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
     }
 
     private void setUpPermissions() {
-        boolean[] perms = new boolean[4];
+        boolean[] perms = new boolean[6];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[1] = checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[2] = checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
         perms[3] = checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+        perms[4] = checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+        perms[5] = checkSelfPermission(Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED;
 
         int numbPerms = 0;
 
@@ -129,62 +122,30 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
             requestPointer++;
         }
 
+        if(!perms[4])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.READ_CONTACTS;
+            requestPointer++;
+        }
+
+        if(!perms[5])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.WRITE_CONTACTS;
+            requestPointer++;
+        }
+
         if(numbPerms != 0)
         {
             requestPermissions(requestPermissions, PERM_REQUEST_CODE);
         }
     }
 
-    private Toolbar initializeToolBar() {
+    private Toolbar initializeToolBar()
+    {
         Toolbar mainTool = findViewById(R.id.message_toolbar);
         setSupportActionBar(mainTool);
         return mainTool;
     }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.blacklist:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, m_messageFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, new BlacklistFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                break;
-            case R.id.contacts:
-                fragmentManager = getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, m_messageFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, new ContactsFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                break;
-        }
-        m_drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (m_drawer.isDrawerOpen(GravityCompat.START)) 
-        {
-            m_drawer.closeDrawer(GravityCompat.START);
-        } 
-        else 
-        {
-            super.onBackPressed();
-        }
-        super.onBackPressed();
-    }
-
-
 
 
     @Override
@@ -240,5 +201,7 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         String messageContent = messageText.getText().toString();
 
         m_messageFragment.sendMessage(targetConversation, messageContent);
+
+        messageText.setText("");
     }
 }

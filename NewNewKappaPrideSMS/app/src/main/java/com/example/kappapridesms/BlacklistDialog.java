@@ -93,7 +93,7 @@ public class BlacklistDialog extends DialogFragment
                 m_blacklistListener.onBlacklistPositiveClick();
                 dismiss();
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        }).setNegativeButton("Whitelist", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)

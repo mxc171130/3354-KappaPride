@@ -1,27 +1,23 @@
 package com.example.kappapridesms;
 
 import android.Manifest;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class ConversationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ConversationDialog.ConversationDialogListener
@@ -41,8 +37,12 @@ public class ConversationActivity extends AppCompatActivity implements Navigatio
         m_conversationDialog = new ConversationDialog();
 
         RecyclerView conversationRecyclerView = initializeRecyclerView();
-        initializeLayoutManager(conversationRecyclerView);
+        LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
+        conversationRecyclerView.setLayoutManager(myRecyclerLinearLayout);
         initializeViewAdapter(conversationRecyclerView);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, myRecyclerLinearLayout.getOrientation());
+        conversationRecyclerView.addItemDecoration(dividerItemDecoration);
 
         Toolbar mainTool = initializeToolBar();
         getWindow().setStatusBarColor(getColor(R.color.colorPrimaryDark));
@@ -61,11 +61,13 @@ public class ConversationActivity extends AppCompatActivity implements Navigatio
 
     private void setUpPermissions()
     {
-        boolean[] perms = new boolean[4];
+        boolean[] perms = new boolean[6];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[1] = checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[2] = checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
         perms[3] = checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+        perms[4] = checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+        perms[5] = checkSelfPermission(Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED;
 
         int numbPerms = 0;
 
@@ -104,6 +106,18 @@ public class ConversationActivity extends AppCompatActivity implements Navigatio
             requestPointer++;
         }
 
+        if(!perms[4])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.READ_CONTACTS;
+            requestPointer++;
+        }
+
+        if(!perms[5])
+        {
+            requestPermissions[requestPointer] = Manifest.permission.WRITE_CONTACTS;
+            requestPointer++;
+        }
+
         if(numbPerms != 0)
         {
             requestPermissions(requestPermissions, PERM_REQUEST_CODE);
@@ -117,12 +131,6 @@ public class ConversationActivity extends AppCompatActivity implements Navigatio
         conversationRecyclerView.setNestedScrollingEnabled(true);
         conversationRecyclerView.setHasFixedSize(true);
         return conversationRecyclerView;
-    }
-
-    private void initializeLayoutManager(RecyclerView conversationRecyclerView)
-    {
-        LinearLayoutManager myRecyclerLinearLayout = new LinearLayoutManager(this);
-        conversationRecyclerView.setLayoutManager(myRecyclerLinearLayout);
     }
 
 

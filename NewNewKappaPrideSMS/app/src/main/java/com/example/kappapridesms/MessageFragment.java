@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Date;
 
-public class MessageFragment extends Fragment implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener
+public class MessageFragment extends Fragment implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, WarningDialog.WarningDialogListener, BlacklistDialog.BlacklistDialogListener
 {
     private View m_fragView;
     private RecyclerView m_messageRecyclerView;
@@ -45,7 +45,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
 
     private boolean m_addContactActive;
     private long m_addContactContent;
-    private AddContactDialog m_addContactDialog;
 
     private boolean m_deleteContactActive;
     private boolean m_searchContact;
@@ -80,7 +79,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         m_forwardDialog = new ForwardDialog();
         m_errorDialog = new ErrorDialog();
         m_warningDialog = new WarningDialog();
-        m_addContactDialog = new AddContactDialog();
         m_blacklistDialog = new BlacklistDialog();
 
         setHasOptionsMenu(true);
@@ -207,10 +205,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 String blacklistContactContent = (String) messageView.getText();
 
                 ConversationRepository instance = ConversationRepository.getInstance();
-                ContactManager contactManager = instance.getContactManager();
                 Blacklist blacklist = instance.getBlacklist();
 
-                long phoneNumber = contactManager.getNumberFromName(blacklistContactContent);
+                long phoneNumber = instance.getPhoneNumber(blacklistContactContent, getContext());
 
                 if(phoneNumber == 0)
                 {
@@ -291,45 +288,25 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
 
     }
 
-    @Override
-    public void onContactPositiveClick()
-    {
-        TextView contactContent = (TextView) m_addContactDialog.getContactContent().findViewById(R.id.conversation_field);
-        String contactName = contactContent.getText().toString();
-        ContactManager contactManager = ConversationRepository.getInstance().getContactManager();
-        contactManager.addContact(m_addContactContent, contactName);
-        contactManager.saveContacts();
-        s_messageViewAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onContactNegativeClick()
-    {
-
-    }
 
     @Override
     public void onBlacklistPositiveClick()
     {
         ConversationRepository instance = ConversationRepository.getInstance();
-        ContactManager contactManager = instance.getContactManager();
         Blacklist blacklist = instance.getBlacklist();
 
-        Contact blacklistContact = contactManager.getContact(m_blacklistContent);
-
-        if(blacklistContact.getName().equals("DNE"))
-        {
-             blacklistContact = new Contact("No Name", m_blacklistContent);
-        }
-
-        blacklist.addBlacklistedContact(blacklistContact);
+        blacklist.addBlacklistedNumber(m_blacklistContent);
         FileSystem.getInstance().saveBlacklistNumbers(blacklist);
     }
 
     @Override
     public void onBlacklistNegativeClick()
     {
+        ConversationRepository instance = ConversationRepository.getInstance();
+        Blacklist blacklist = instance.getBlacklist();
 
+        blacklist.removeBlacklistedNumber(m_blacklistContent);
+        FileSystem.getInstance().saveBlacklistNumbers(blacklist);
     }
 
 
@@ -366,6 +343,7 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         return s_messageViewAdapter;
     }
 
+    /*
     public static void deleteContact(ContentResolver contact, String number)
     {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -384,7 +362,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
             e.printStackTrace();
         }
     }
+    */
 
+    /*
     private static long getContactID(ContentResolver contact, String number)
     {
         Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
@@ -414,4 +394,5 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         }
         return -1;
     }
+    */
 }
