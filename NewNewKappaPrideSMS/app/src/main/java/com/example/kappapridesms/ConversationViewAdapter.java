@@ -1,19 +1,22 @@
 package com.example.kappapridesms;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import java.util.ArrayList;
+
 public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationViewHolder>
 {
-
-
     /**
      * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
      * an item.
@@ -66,15 +69,66 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position)
     {
-
         ConversationRepository instance = ConversationRepository.getInstance();
-        Conversation targetConversation = instance.getTargetConversation();
+        ArrayList<Conversation> conversations = instance.getConversations();
+        Conversation conversation = conversations.get(position);
+
+        if(conversation.size() > 0)
+        {
+            Message previewMessage = conversation.getMessage(conversation.size() - 1);
+            ((TextView) holder.getConversationBubble().getChildAt(1)).setText(previewMessage.getContent());
+        }
+
+        Long recipientPhone = conversation.getRecipientPhone();
+        Contact possibleContact = instance.getContactManager().getContact(recipientPhone);
+
+        if(!possibleContact.getName().equals("DNE"))
+        {
+            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(possibleContact.getName());
+        }
+        else
+        {
+            ((TextView) holder.getConversationBubble().getChildAt(0)).setText(recipientPhone.toString());
+        }
+
+        holder.getConversationBubble().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                LinearLayout messageLayout = (LinearLayout) v;
+                TextView messageView = (TextView) messageLayout.getChildAt(0);
+                String content = messageView.getText().toString();
+                ConversationRepository instance = ConversationRepository.getInstance();
+                ContactManager contactManager = instance.getContactManager();
+
+                long phoneNumber = contactManager.getNumberFromName(content);
+
+                if(phoneNumber == 0)
+                {
+                    phoneNumber = Long.parseLong(content);
+                }
+
+                ArrayList<Conversation> allConversations = instance.getConversations();
+
+                for(int i = 0; i < allConversations.size(); i++)
+                {
+                    Conversation testConversation = allConversations.get(i);
+
+                    // Switch to this conversation
+                    if(testConversation.getRecipientPhone() == phoneNumber)
+                    {
+                        instance.setTargetConversation(i);
+
+                        Intent startMessageActvityIntent = new Intent(v.getContext(), MessageActivity.class);
+                        startMessageActvityIntent.setAction("switch");
+                        v.getContext().startActivity(startMessageActvityIntent);
+                    }
+                }
+            }
+        });
 
         // must be able to go to a conversation that is selected.
         // It then goes to MessageActivity view
-
-
-
     }
 
 
@@ -84,7 +138,8 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
      * @return The total number of items in this adapter.
      */
     @Override
-    public int getItemCount() {
-        return ConversationRepository.getInstance().getTargetConversation().size();
+    public int getItemCount()
+    {
+        return ConversationRepository.getInstance().getConversations().size();
     }
 }

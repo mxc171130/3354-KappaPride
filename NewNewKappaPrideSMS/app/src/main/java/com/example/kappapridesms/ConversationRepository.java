@@ -117,11 +117,13 @@ public class ConversationRepository
         // Scan through the new ArrayList. Update the target conversation to the conversation in the new
         // ArrayList with the matching number, also setting the conversations to the loaded ArrayList if
         // successful.
+
+        m_conversations = loadedConversations;
+
         for(int i = 0; i < loadedConversations.size(); i++)
         {
             if(loadedConversations.get(i).getRecipientPhone() == getTargetConversation().getRecipientPhone())
             {
-                m_conversations = loadedConversations;
                 setTargetConversation(i);
                 break;
             }
@@ -149,5 +151,6 @@ public class ConversationRepository
         m_conversations = new ArrayList<Conversation>();
         m_contactManager = new ContactManager();
         m_blacklist = new Blacklist();
+        m_targetConversation = new Conversation(0);
     }
 }

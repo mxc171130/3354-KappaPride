@@ -97,7 +97,7 @@ public class AddContactDialog extends DialogFragment
 
         // Set the content (View) and the title for this dialog.
         dialogBuilder.setTitle("Add Contact");
-        m_contactContent = requireActivity().getLayoutInflater().inflate(R.layout.contact_view, null);
+        m_contactContent = requireActivity().getLayoutInflater().inflate(R.layout.conversation_view, null);
         dialogBuilder.setView(m_contactContent);
 
         // Specify the onClick functionality for this dialog.

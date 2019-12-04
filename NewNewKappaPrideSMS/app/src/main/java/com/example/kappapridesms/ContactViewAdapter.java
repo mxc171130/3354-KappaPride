@@ -47,7 +47,7 @@ public class ContactViewAdapter extends ArrayAdapter<String>
         LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if(convertView == null)
         {
-            convertView = inflater.inflate(R.layout.contact_view, parent, false);
+            convertView = inflater.inflate(R.layout.conversation_view, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
             } else

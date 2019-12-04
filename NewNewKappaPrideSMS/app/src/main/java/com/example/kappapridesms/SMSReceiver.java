@@ -96,6 +96,11 @@ public class SMSReceiver extends BroadcastReceiver
             displayManager.notify(15234,m_notification);
         }
 
-        MessageFragment.getMessageViewAdapter().notifyDataSetChanged();
+        if(MessageFragment.getMessageViewAdapter() != null)
+        {
+            MessageFragment.getMessageViewAdapter().notifyDataSetChanged();
+        }
+
+        ConversationActivity.getConversationViewAdapter().notifyDataSetChanged();
     }
 }

@@ -10,25 +10,16 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageFragment extends Fragment implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, WarningDialog.WarningDialogListener, AddContactDialog.ContactDialogListener, BlacklistDialog.BlacklistDialogListener
@@ -332,7 +323,7 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     @Override
     public void onContactPositiveClick()
     {
-        TextView contactContent = (TextView) m_addContactDialog.getContactContent().findViewById(R.id.contact_field);
+        TextView contactContent = (TextView) m_addContactDialog.getContactContent().findViewById(R.id.conversation_field);
         String contactName = contactContent.getText().toString();
         ContactManager contactManager = ConversationRepository.getInstance().getContactManager();
         contactManager.addContact(m_addContactContent, contactName);
@@ -354,6 +345,12 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         Blacklist blacklist = instance.getBlacklist();
 
         Contact blacklistContact = contactManager.getContact(m_blacklistContent);
+
+        if(blacklistContact.getName().equals("DNE"))
+        {
+             blacklistContact = new Contact("No Name", m_blacklistContent);
+        }
+
         blacklist.addBlacklistedContact(blacklistContact);
         FileSystem.getInstance().saveBlacklistNumbers(blacklist);
     }

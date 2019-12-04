@@ -143,6 +143,11 @@ public class FileSystem
             File conversationPath = new File(pathBuilder.toString());
             File[] allConversations = conversationPath.listFiles();
 
+            if(allConversations == null)
+            {
+                return;
+            }
+
             for(int i = 0; i < allConversations.length; i++)
             {
                 // Create a conversation based on the name of the file (which houses the phone number)
