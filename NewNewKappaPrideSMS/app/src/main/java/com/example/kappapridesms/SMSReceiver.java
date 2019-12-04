@@ -49,7 +49,6 @@ public class SMSReceiver extends BroadcastReceiver
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
-            ContactManager contactManager=instance.getContactManager();
             /**
             for each message the phone will check the date,if the message is self sent
              and the actual message itself
@@ -74,10 +73,7 @@ public class SMSReceiver extends BroadcastReceiver
                 converts number into Long
                  */
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
-                if(!contactManager.getContact(senderPhoneNumberLong).getName().contains("DNE"))
-                {
-                    recieveContact=contactManager.getContact(senderPhoneNumberLong).getName();
-                }
+
                 /**
                 Checks to see if the phone number is blacklisted
                  */

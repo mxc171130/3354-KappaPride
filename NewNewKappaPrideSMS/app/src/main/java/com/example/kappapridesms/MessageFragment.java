@@ -207,6 +207,12 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 ConversationRepository instance = ConversationRepository.getInstance();
                 Blacklist blacklist = instance.getBlacklist();
 
+                if(blacklistContactContent.equals("You"))
+                {
+                    m_blacklistActive = false;
+                    return true;
+                }
+
                 long phoneNumber = instance.getPhoneNumber(blacklistContactContent, getContext());
 
                 if(phoneNumber == 0)
