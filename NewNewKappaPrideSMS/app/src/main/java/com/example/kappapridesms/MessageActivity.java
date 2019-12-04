@@ -53,8 +53,6 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         fragmentTransaction.commit();
 
         Toolbar mainTool = initializeToolBar();
-        initializeNavigationView();
-        initializeToggle(mainTool);
 
         SentReceiver contextRegisteredSentReceiver = new SentReceiver(this);
         IntentFilter sentReceiverFilter = new IntentFilter();
@@ -135,18 +133,6 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         {
             requestPermissions(requestPermissions, PERM_REQUEST_CODE);
         }
-    }
-
-    private void initializeToggle(Toolbar mainTool) {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, m_drawer, mainTool, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        m_drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    private void initializeNavigationView() {
-        m_drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private Toolbar initializeToolBar() {

@@ -1,6 +1,11 @@
 package com.example.kappapridesms;
 
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -41,6 +46,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     private boolean m_addContactActive;
     private long m_addContactContent;
     private AddContactDialog m_addContactDialog;
+
+    private boolean m_deleteContactActive;
+    private boolean m_searchContact;
 
     private boolean m_blacklistActive;
     private long m_blacklistContent;
@@ -123,7 +131,12 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 m_forwardActive = true;
                 return true;
             case R.id.message_contact:
-                m_addContactActive = true;
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity"));
+                intent.setAction("android.intent.action.MAIN");
+                intent.addCategory("android.intent.category.LAUNCHER");
+                intent.addCategory("android.intent.category.DEFAULT");
+                startActivity(intent);
                 return true;
             case R.id.message_blacklist:
                 m_blacklistActive = true;
@@ -174,48 +187,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 m_forwardDialog.show(getActivity().getSupportFragmentManager(), "forward_dialog");
 
                 m_forwardActive = false;
-            }
-        }
-        else if(m_addContactActive)
-        {
-            if(v instanceof RecyclerView)
-            {
-                RecyclerView recyclerView = (RecyclerView) v;
-                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
-                if(childView == null)
-                {
-                    m_addContactActive = false;
-                    return true;
-                }
-
-                LinearLayout messageLayout = (LinearLayout) childView;
-                TextView messageView = (TextView) messageLayout.getChildAt(0);
-                String addContactContent = (String) messageView.getText();
-
-                ConversationRepository instance = ConversationRepository.getInstance();
-                ContactManager contactManager = instance.getContactManager();
-
-                long phoneNumber;
-
-                try
-                {
-                    phoneNumber = Long.parseLong(addContactContent);
-                }
-                catch(Exception ex)
-                {
-                    return true;
-                }
-
-                if(!contactManager.getContact(phoneNumber).getName().equals("DNE"))
-                {
-                    return true;
-                }
-
-                m_addContactContent = phoneNumber;
-
-                m_addContactDialog.show(getActivity().getSupportFragmentManager(), "add_contact_dialog");
-
-                m_addContactActive = false;
             }
         }
         else if(m_blacklistActive)
@@ -393,5 +364,54 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     public static MessageViewAdapter getMessageViewAdapter()
     {
         return s_messageViewAdapter;
+    }
+
+    public static void deleteContact(ContentResolver contact, String number)
+    {
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        String[] args = new String[] {String.valueOf(getContactID(contact, number))};
+        operations.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
+        try
+        {
+            contact.applyBatch(ContactsContract.AUTHORITY, operations);
+        }
+        catch(RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        catch(OperationApplicationException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static long getContactID(ContentResolver contact, String number)
+    {
+        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+        String[] list = {ContactsContract.PhoneLookup._ID};
+        Cursor cursor = null;
+        try
+        {
+            cursor = contact.query(contactUri, list, null, null, null);
+            if(cursor.moveToFirst())
+            {
+                int personID = cursor.getColumnIndex(ContactsContract.PhoneLookup._ID);
+                return cursor.getLong(personID);
+            }
+            return -1;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(cursor != null)
+            {
+                cursor.close();
+                cursor = null;
+            }
+        }
+        return -1;
     }
 }

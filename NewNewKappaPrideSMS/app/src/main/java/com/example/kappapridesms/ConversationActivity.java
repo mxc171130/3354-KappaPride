@@ -24,7 +24,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.io.File;
 import java.util.ArrayList;
 
-
 public class ConversationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ConversationDialog.ConversationDialogListener
 {
     private static ConversationViewAdapter s_conversationViewAdapter;

@@ -36,13 +36,14 @@ public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
         else
         {
             // INSERT CONTACT ALIAS CODE HERE
-            if(authorContact.getName().equals("DNE"))
+            String name = ConversationRepository.getInstance().getContactName("" + authorPhone, KappaApplication.getAppContext());
+            if(name == null || name.length() == 0)
             {
                 ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorPhone + "");
             }
             else
             {
-                ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(authorContact.getName());
+                ((TextView) viewHolder.getMessageBubble().getChildAt(0)).setText(name);
             }
         }
 
