@@ -1,0 +1,100 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.kappapridesms"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+8-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml
+10
+11    <uses-feature android:name="android.hardware.telephony" />
+11-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:5:5-63
+11-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:5:19-60
+12
+13    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+13-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:7:5-75
+13-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:7:22-72
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:8:5-67
+14-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:8:22-64
+15    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+15-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:9:5-70
+15-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:9:22-67
+16    <uses-permission android:name="android.permission.SEND_SMS" />
+16-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:10:5-67
+16-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:10:22-64
+17    <uses-permission android:name="android.permission.READ_SMS" />
+17-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:11:5-67
+17-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:11:22-64
+18
+19    <application
+19-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:13:5-42:19
+20        android:name="com.example.kappapridesms.KappaApplication"
+20-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:13:18-75
+21        android:allowBackup="true"
+21-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:14:9-35
+22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+22-->[androidx.core:core:1.0.1] C:\Users\alaza\.gradle\caches\transforms-2\files-2.1\53fe9bf45a5254e57daf83f6b64e6360\core-1.0.1\AndroidManifest.xml:22:18-86
+23        android:debuggable="true"
+24        android:icon="@mipmap/ic_launcher"
+24-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:15:9-43
+25        android:label="@string/app_name"
+25-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:16:9-41
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:17:9-54
+27        android:supportsRtl="true"
+27-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:18:9-35
+28        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+28-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:19:9-65
+29        <receiver
+29-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:21:9-28:20
+30            android:name="com.example.kappapridesms.SMSReceiver"
+30-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:22:13-40
+31            android:enabled="true"
+31-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:23:13-35
+32            android:exported="true" >
+32-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:24:13-36
+33            <intent-filter android:priority="2000000000" >
+33-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:25:13-27:29
+33-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:25:28-57
+34                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+34-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:26:17-82
+34-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:26:25-79
+35            </intent-filter>
+36        </receiver>
+37
+38        <activity
+38-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:30:9-41:20
+39            android:name="com.example.kappapridesms.MessageActivity"
+39-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:31:13-44
+40            android:launchMode="singleTop"
+40-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:32:13-43
+41            android:theme="@style/AppTheme.NoActionBar" >
+41-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:33:13-56
+42            <intent-filter>
+42-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:34:13-38:29
+43                <action android:name="android.intent.action.MAIN" />
+43-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:35:17-69
+43-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:35:25-66
+44                <action android:name="android.intent.action.SEARCH" />
+44-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:36:17-71
+44-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:36:25-68
+45
+46                <category android:name="android.intent.category.LAUNCHER" />
+46-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:37:17-77
+46-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:37:27-74
+47            </intent-filter>
+48
+49            <meta-data
+49-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:39:13-40:62
+50                android:name="android.app.searchable"
+50-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:39:24-61
+51                android:resource="@xml/searchable" />
+51-->C:\Users\alaza\Documents\GitHub\3354-KappaPride-FirstIntegration\KappaPrideSMS\KappaPrideSMS\app\src\main\AndroidManifest.xml:40:25-59
+52        </activity>
+53    </application>
+54
+55</manifest>
