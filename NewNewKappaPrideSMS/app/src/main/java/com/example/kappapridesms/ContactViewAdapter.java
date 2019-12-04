@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+
 import java.util.List;
 
 public class ContactViewAdapter extends ArrayAdapter<String>
@@ -58,12 +61,12 @@ public class ContactViewAdapter extends ArrayAdapter<String>
 
         String firstLetter = String.valueOf(getItem(position).charAt(0));
 
-        /*
+
         ColorGenerator generator = ColorGenerator.MATERIAL;
         int color = generator.getColor(getItem(position));
 
         TextDrawable drawable = TextDrawable.builder().buildRound(firstLetter, color);
-         */
+
 
         return convertView;
     }
@@ -75,8 +78,8 @@ public class ContactViewAdapter extends ArrayAdapter<String>
 
         public ViewHolder(View v)
         {
-            imageView = (ImageView) v.findViewById(R.id.image_view);
-            contactName = (TextView) v.findViewById(R.id.contact_name);
+            //imageView = (ImageView) v.findViewById(R.id.image_view);
+            //contactName = (TextView) v.findViewById(R.id.contact_name);
         }
     }
 }

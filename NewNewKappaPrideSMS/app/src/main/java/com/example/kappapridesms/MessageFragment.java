@@ -2,9 +2,11 @@ package com.example.kappapridesms;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
@@ -61,6 +63,7 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     private long m_addContactContent;
     private AddContactDialog m_addContactDialog;
     private boolean m_deleteContactActive;
+    private boolean m_searchContact;
 
     private boolean m_blacklistActive;
     private long m_blacklistContent;
@@ -145,14 +148,15 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 m_forwardActive = true;
                 return true;
             case R.id.message_contact:
-                m_addContactActive = true;
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity"));
+                intent.setAction("android.intent.action.MAIN");
+                intent.addCategory("android.intent.category.LAUNCHER");
+                intent.addCategory("android.intent.category.DEFAULT");
+                startActivity(intent);
                 return true;
-            case R.id.message_blacklist:
-
-                return true;
-            case R.id.message_delete_contact:
-                m_deleteContactActive = true;
-                return true;
+            case R.id.message_contact_search:
+                m_searchContact = true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,54 +244,15 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         }
         else if(m_addContactActive)
         {
-            /*Added in
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, PICK_CONTACT);
-            */
-            // Starts intent for accessing contacts.
-            Intent intentInsertEdit = new Intent(Intent.ACTION_INSERT_OR_EDIT);
-            intentInsertEdit.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-            startActivity(intentInsertEdit);
 
-            if(v instanceof RecyclerView)
-            {
-                RecyclerView recyclerView = (RecyclerView) v;
-                View childView = recyclerView.findChildViewUnder(ev.getX(), ev.getY());
-                if(childView == null)
-                {
-                    m_addContactActive = false;
-                    return true;
-                }
+        }
+        else if(m_searchContact)
+        {
+            /*
+            String name = getContactName("2345678272", getContext());
+            Toast.makeText(getContext(), "You've picked: " + name, Toast.LENGTH_LONG).show();
 
-                LinearLayout messageLayout = (LinearLayout) childView;
-                TextView messageView = (TextView) messageLayout.getChildAt(0);
-                String addContactContent = (String) messageView.getText();
-
-                ConversationRepository instance = ConversationRepository.getInstance();
-                ContactManager contactManager = instance.getContactManager();
-
-                long phoneNumber;
-
-                try
-                {
-                    phoneNumber = Long.parseLong(addContactContent);
-                }
-                catch(Exception ex)
-                {
-                    return true;
-                }
-
-                if(!contactManager.getContact(phoneNumber).getName().equals("DNE"))
-                {
-                    return true;
-                }
-
-                m_addContactContent = phoneNumber;
-
-                m_addContactDialog.show(getActivity().getSupportFragmentManager(), "add_contact_dialog");
-
-                m_addContactActive = false;
-            }
+             */
         }
         else if(m_deleteContactActive)
         {
@@ -464,6 +429,7 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     {
         return s_messageViewAdapter;
     }
+
 
     public static void deleteContact(ContentResolver contact, String number)
     {
