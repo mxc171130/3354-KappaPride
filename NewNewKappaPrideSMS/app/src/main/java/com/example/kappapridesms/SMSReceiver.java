@@ -38,7 +38,7 @@ public class SMSReceiver extends BroadcastReceiver
 
     @Override
     public void onReceive(Context context, Intent intent)
-    {   String userNumber="";
+    {   String recieveContact="";
         /**
         Checks to see if the intent being sent is a SMS message
          */
@@ -49,6 +49,7 @@ public class SMSReceiver extends BroadcastReceiver
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
+            ContactManager contactManager=instance.getContactManager();
             /**
             for each message the phone will check the date,if the message is self sent
              and the actual message itself
@@ -60,7 +61,7 @@ public class SMSReceiver extends BroadcastReceiver
                 Message receivedMessage = new Message(new Date().getTime(), false, message.getMessageBody());
 
                 String senderPhoneNumber = message.getOriginatingAddress();
-                userNumber=senderPhoneNumber;
+                recieveContact=senderPhoneNumber;
                 /**
                 Checks if the phone number is of valid length
                  */
@@ -72,6 +73,10 @@ public class SMSReceiver extends BroadcastReceiver
                 converts number into Long
                  */
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
+                if(!contactManager.getContact(senderPhoneNumberLong).getName().contains("DNE"))
+                {
+                    recieveContact=contactManager.getContact(senderPhoneNumberLong).getName();
+                }
                 /**
                 Checks to see if the phone number is blacklisted
                  */
@@ -123,7 +128,7 @@ public class SMSReceiver extends BroadcastReceiver
              */
             Notification m_notification= new NotificationCompat.Builder(context, NOTIFICATION)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentTitle(userNumber)
+                    .setContentTitle(recieveContact)
                     .setContentText("Has sent you a message")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
