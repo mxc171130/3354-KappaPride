@@ -33,7 +33,7 @@ public class SMSReceiver extends BroadcastReceiver
      *The program then checks to see if the number is black listed,if not then the phone will get the message
      * and the phone will send the user a notification
      *
-     * @author Alazar Debello
+     *
      */
 
     @Override
@@ -62,7 +62,7 @@ public class SMSReceiver extends BroadcastReceiver
                 String senderPhoneNumber = message.getOriginatingAddress();
                 userNumber=senderPhoneNumber;
                 /**
-                Checks if the phonenumber is of valid length
+                Checks if the phone number is of valid length
                  */
                 if(senderPhoneNumber.length() == 10)
                 {
