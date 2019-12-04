@@ -1,18 +1,9 @@
 package com.example.kappapridesms;
 
-import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.ContentProvider;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.OperationApplicationException;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,13 +50,10 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     private boolean m_addContactActive;
     private long m_addContactContent;
     private AddContactDialog m_addContactDialog;
-    private boolean m_deleteContactActive;
 
     private boolean m_blacklistActive;
     private long m_blacklistContent;
     private BlacklistDialog m_blacklistDialog;
-
-    private final int PICK_CONTACT = 1;
 
     @Nullable
     @Override
@@ -148,53 +135,13 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
                 m_addContactActive = true;
                 return true;
             case R.id.message_blacklist:
-
-                return true;
-            case R.id.message_delete_contact:
-                m_deleteContactActive = true;
+                m_blacklistActive = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-        /*
-        switch (requestCode)
-        {
-            case (PICK_CONTACT) :
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    Uri contactData = data.getData();
-                    Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
-                    if(c.moveToFirst())
-                    {
-                        String name = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                        Toast.makeText(getContext(), "You've picked: " + name, Toast.LENGTH_LONG).show();
-                    }
-                }
-        }
-         */
-        /*
-        if(requestCode == PICK_CONTACT)
-        {
-            Uri contactData = data.getData();
-            Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
-
-            if(c.moveToFirst())
-            {
-                String name = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                Toast.makeText(getContext(), "You've picked: " + name, Toast.LENGTH_LONG).show();
-            }
-        }
-        */
-    }
 
     @Override
     public boolean onTouch(View v, MotionEvent ev)
@@ -240,15 +187,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         }
         else if(m_addContactActive)
         {
-            /*Added in
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(intent, PICK_CONTACT);
-            */
-            // Starts intent for accessing contacts.
-            Intent intentInsertEdit = new Intent(Intent.ACTION_INSERT_OR_EDIT);
-            intentInsertEdit.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-            startActivity(intentInsertEdit);
-
             if(v instanceof RecyclerView)
             {
                 RecyclerView recyclerView = (RecyclerView) v;
@@ -288,11 +226,6 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
 
                 m_addContactActive = false;
             }
-        }
-        else if(m_deleteContactActive)
-        {
-            // Add in way to get user inputted phone number
-            deleteContact(getActivity().getContentResolver(), "number");
         }
         else if(m_blacklistActive)
         {
@@ -463,54 +396,5 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
     public static MessageViewAdapter getMessageViewAdapter()
     {
         return s_messageViewAdapter;
-    }
-
-    public static void deleteContact(ContentResolver contact, String number)
-    {
-        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        String[] args = new String[] {String.valueOf(getContactID(contact, number))};
-        operations.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
-        try
-        {
-            contact.applyBatch(ContactsContract.AUTHORITY, operations);
-        }
-        catch(RemoteException e)
-        {
-            e.printStackTrace();
-        }
-        catch(OperationApplicationException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private static long getContactID(ContentResolver contact, String number)
-    {
-        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        String[] list = {ContactsContract.PhoneLookup._ID};
-        Cursor cursor = null;
-        try
-        {
-            cursor = contact.query(contactUri, list, null, null, null);
-            if(cursor.moveToFirst())
-            {
-                int personID = cursor.getColumnIndex(ContactsContract.PhoneLookup._ID);
-                return cursor.getLong(personID);
-            }
-            return -1;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if(cursor != null)
-            {
-                cursor.close();
-                cursor = null;
-            }
-        }
-        return -1;
     }
 }

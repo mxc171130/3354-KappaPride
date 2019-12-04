@@ -4,16 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,22 +17,16 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MessageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SentReceiver.OnFailedSendListener
 {
@@ -124,13 +114,11 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
 
 
     private void setUpPermissions() {
-        boolean[] perms = new boolean[6];
+        boolean[] perms = new boolean[4];
         perms[0] = checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[1] = checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
         perms[2] = checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
         perms[3] = checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
-        perms[4] = checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-        perms[5] = checkSelfPermission(Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED;
 
         int numbPerms = 0;
 
@@ -167,16 +155,6 @@ public class MessageActivity extends AppCompatActivity implements NavigationView
         {
             requestPermissions[requestPointer] = Manifest.permission.READ_SMS;
             requestPointer++;
-        }
-
-        if(!perms[4])
-        {
-            requestPermissions[requestPointer] = Manifest.permission.READ_CONTACTS;
-        }
-
-        if(!perms[5])
-        {
-            requestPermissions[requestPointer] = Manifest.permission.WRITE_CONTACTS;
         }
 
         if(numbPerms != 0)

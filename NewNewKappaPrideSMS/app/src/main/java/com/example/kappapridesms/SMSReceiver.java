@@ -25,39 +25,27 @@ public class SMSReceiver extends BroadcastReceiver
 {
     public static final String NOTIFICATION = "kappa_notification";
 
-    /**
-     *
-     * @param context The context
-     * @param intent The intent is the message that is sent to the phone
-     *
-     *  This class runs in the background and is called whenever the phone
-     *  receives a message, updates the message log and sends the user's phone
-     *  a notification
-     *
-     */
     @Override
     public void onReceive(Context context, Intent intent)
-    { String userNumber="";
-        //If the intent is a SMS message messages will receive the intent
+    {
         if(intent.getAction().equals(SMS_RECEIVED_ACTION))
-        {   //Receive the message,the blacklist
+        {
             SmsMessage[] messages = getMessagesFromIntent(intent);
             ConversationRepository instance = ConversationRepository.getInstance();
             Blacklist blacklist = instance.getBlacklist();
-            //For each message the date,and message is received
+
             nextMessage:
             for(SmsMessage message : messages)
             {
                 Message receivedMessage = new Message(new Date().getTime(), false, message.getMessageBody());
-                //receives the phone number
+
                 String senderPhoneNumber = message.getOriginatingAddress();
-                userNumber=senderPhoneNumber;
 
                 if(senderPhoneNumber.length() == 10)
                 {
                     senderPhoneNumber = "1" + senderPhoneNumber;
                 }
-                //converts the number to a long and checks if the number is blacklisted
+
                 long senderPhoneNumberLong = Long.parseLong(senderPhoneNumber);
 
                 for(int i = 0; i < blacklist.size(); i++)
@@ -67,7 +55,7 @@ public class SMSReceiver extends BroadcastReceiver
                         continue nextMessage;
                     }
                 }
-                //Places in message into the conversation
+
                 for(Conversation insertConversation : instance.getConversations())
                 {
                     if(insertConversation.getRecipientPhone() == senderPhoneNumberLong)
@@ -82,28 +70,28 @@ public class SMSReceiver extends BroadcastReceiver
                 instance.addConversation(newConversation);
                 newConversation.addMessage(receivedMessage);
             }
-            //Saving conversation
+
             FileSystem.getInstance().saveConversations(instance.getConversations());
-            //creating notification
+
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             {
                 NotificationManager m_manger = context.getSystemService(NotificationManager.class);
-                //Setting up Notificator channel
+
                 NotificationChannel popUp = new NotificationChannel(NOTIFICATION, "popUp", NotificationManager.IMPORTANCE_DEFAULT);
                 popUp.setDescription("SMS notification");
                 m_manger.createNotificationChannel(popUp);
             }
-            //Completing notification setting
+
             Notification m_notification= new NotificationCompat.Builder(context, NOTIFICATION)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentTitle(userNumber)
+                    .setContentTitle("Message")
                     .setContentText("Has sent you a message")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setChannelId(NOTIFICATION)
                     .setAutoCancel(true)
                     .build();
-            //Creating Notification Manager and sends notification
+
             NotificationManagerCompat displayManager = NotificationManagerCompat.from(context);
             displayManager.notify(15234,m_notification);
         }
