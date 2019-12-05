@@ -2,6 +2,8 @@ package com.example.kappapridesms;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +12,9 @@ import static org.junit.Assert.*;
  *
  * @author Michael Chang
  */
-public class MessageTest {
+@RunWith(JUnit4.class)
+public class MessageTest
+{
     /**
      * This initializes the initial object of class Message.
      */
@@ -42,7 +46,7 @@ public class MessageTest {
     @Test
     public void contentTest()
     {
-        assertEquals("This is the first test message.", message.getContent());
+        assertEquals("This is the test message.", message.getContent());
     }
 
     /**

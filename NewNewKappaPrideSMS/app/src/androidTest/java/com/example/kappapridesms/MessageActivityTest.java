@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 
 import static org.junit.Assert.*;
@@ -21,6 +23,7 @@ import static org.junit.Assert.*;
  *      -Reading Contacts from Contact list
  *      -Writing to the Contact list
  */
+@RunWith(JUnit4.class)
 public class MessageActivityTest
 {
     Context m_appContext;
@@ -41,9 +44,8 @@ public class MessageActivityTest
  *      -Reading SMS messages
  */
     @Test
-    public void testPermissions1() {
-
-
+    public void testPermissions1()
+    {
         assertEquals(m_appContext.checkSelfPermission(Manifest.permission.RECEIVE_SMS), PackageManager.PERMISSION_GRANTED);
         assertEquals(m_appContext.checkSelfPermission(Manifest.permission.SEND_SMS), PackageManager.PERMISSION_GRANTED);
         assertEquals(m_appContext.checkSelfPermission(Manifest.permission.READ_SMS), PackageManager.PERMISSION_GRANTED);

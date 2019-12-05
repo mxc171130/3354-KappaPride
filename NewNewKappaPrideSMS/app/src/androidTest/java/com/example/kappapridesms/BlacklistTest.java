@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
 
@@ -16,7 +18,9 @@ import static org.junit.Assert.*;
  * Path Coverage 100%
  * @author AlazarDebello
  */
-public class BlacklistTest {
+@RunWith(JUnit4.class)
+public class BlacklistTest
+{
     private ArrayList<Long> m_blacklist=null;
     @Before
     public void setUp() throws Exception
