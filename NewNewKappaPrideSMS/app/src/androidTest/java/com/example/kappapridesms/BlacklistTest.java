@@ -21,11 +21,11 @@ import static org.junit.Assert.*;
 @RunWith(JUnit4.class)
 public class BlacklistTest
 {
-    private ArrayList<Long> m_blacklist=null;
+    private Blacklist m_blacklist=null;
     @Before
     public void setUp() throws Exception
     {
-        m_blacklist= new ArrayList<>();
+        m_blacklist= new Blacklist();
 
     }
 
@@ -37,8 +37,8 @@ public class BlacklistTest
     {
         long num1=Long.parseLong("2222222222");
         long num2=Long.parseLong("333333333");
-        m_blacklist.add(num1);
-        m_blacklist.add(num2);
+        m_blacklist.addBlacklistedNumber(num1);
+        m_blacklist.addBlacklistedNumber(num2);
         assertEquals(2,m_blacklist.size());
 
 
@@ -53,9 +53,9 @@ public class BlacklistTest
     public void test2()
     {   long num1=Long.parseLong("222222222");
         long num2=Long.parseLong("333333333");
-        m_blacklist.add(num1);
-        m_blacklist.add(num2);
-        m_blacklist.remove(num1);
+        m_blacklist.addBlacklistedNumber(num1);
+        m_blacklist.addBlacklistedNumber(num2);
+        m_blacklist.removeBlacklistedNumber(num1);
         assertEquals(1,m_blacklist.size());
 
     }
@@ -67,11 +67,10 @@ public class BlacklistTest
     public void test3()
     {   long num1=Long.parseLong("2222222222");
         long num2=Long.parseLong("3333333333");
-        m_blacklist.add(num1);
-        m_blacklist.add(num2);
-        m_blacklist.remove("2222222223");
-        assertEquals(2,m_blacklist.size());
-
+        m_blacklist.addBlacklistedNumber(num1);
+        m_blacklist.addBlacklistedNumber(num2);
+        m_blacklist.removeBlacklistedNumber(2222222222L);
+        assertEquals(1,m_blacklist.size());
     }
 
     /**
@@ -81,8 +80,8 @@ public class BlacklistTest
     public void test4()
     {
         long num1=Long.parseLong("222222222");
-        m_blacklist.add(num1);
-        long num2=m_blacklist.get(0);
+        m_blacklist.addBlacklistedNumber(num1);
+        long num2=m_blacklist.getBlacklistedContact(m_blacklist.size() - 1);
         assertEquals(num1,num2);
     }
 
