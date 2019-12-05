@@ -14,6 +14,36 @@ import java.util.ArrayList;
  * All modifications to ConversationRepository's fields should be handled by the
  * appropriate save feature implemented in this class. This class uses the Singleton
  * design pattern to ensure that only one FileSystem is in use.
+ * <p>
+ *     Contains one private attributes:
+ *     <p>
+ *         - m_instance
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains five public methods:
+ *     <p>
+ *         - getInstance()
+ *     </p>
+ *     <p>
+ *         - loadBlacklistNumbers()
+ *     </p>
+ *     <p>
+ *         - loadConversations()
+ *     </p>
+ *     <p>
+ *         - saveConversations()
+ *     </p>
+ *     <p>
+ *         - saveBlacklistNumbers()
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains a private method:
+ *     <p>
+ *         - saveConversation()
+ *     </p>
+ * </p>
  *
  * @author Nathan Beck
  */

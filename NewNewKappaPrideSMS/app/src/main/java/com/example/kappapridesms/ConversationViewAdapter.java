@@ -14,6 +14,27 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.util.ArrayList;
 
+/**
+ * Class that provides a binding from an app-specific data set to views that are displayed within a RecyclerView.
+ * <p>
+ *     Contains four public methods:
+ *     <p>
+ *         - onCreateViewHolder()
+ *     </p>
+ *     <p>
+ *         - onBindViewHolder()
+ *         <p>
+ *             - onClick()
+ *         </p>
+ *     </p>
+ *     <p>
+ *         - getItemCount()
+ *     </p>
+ * </p>
+ *
+ * @author Nathan Beck
+ */
+
 public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationViewHolder>
 {
     /**
@@ -92,6 +113,11 @@ public class ConversationViewAdapter extends RecyclerView.Adapter<ConversationVi
         }
 
         holder.getConversationBubble().setOnClickListener(new View.OnClickListener() {
+            /**
+             * Method that is called when the button in the ViewAdapter is clicked.
+             *
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v)
             {

@@ -14,6 +14,52 @@ import java.util.*;
  * modifications to the data are reflected in every retrieved instance since
  * there is only one instance.
  *
+ * <p>
+ *     Contains four private attributes:
+ *     <p>
+ *         - m_instance
+ *     </p>
+ *     <p>
+ *         - m__conversations
+ *     </p>
+ *     <p>
+ *         - m_targetConversation
+ *     </p>
+ *     <p>
+ *         - m_blacklist
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains nine public methods:
+ *     <p>
+ *         - addConversation()
+ *     </p>
+ *     <p>
+ *         - getInstance()
+ *     </p>
+ *     <p>
+ *         - getBlacklist()
+ *     </p>
+ *     <p>
+ *         - getConversation()
+ *     </p>
+ *     <p>
+ *         - getTargetConversation()
+ *     </p>
+ *     <p>
+ *         - loadConversations()
+ *     </p>
+ *     <p>
+ *         - setTargetConversation()
+ *     </p>
+ *     <p>
+ *         - getContactName()
+ *     </p>
+ *     <p>
+ *         - getPhoneNumber()
+ *     </p>
+ * </p>
+ *
  * @author Nathan Beck
  */
 public class ConversationRepository
@@ -142,6 +188,13 @@ public class ConversationRepository
         m_targetConversation = new Conversation(0);
     }
 
+    /**
+     * Method that gets the contact name by using two parameters received: phoneNumber and context. phoneNumber being the phone number of the contact and the context being the Activity.
+     *
+     * @param phoneNumber String that holds the value of the phone number.
+     * @param context Current state of the application.
+     * @return String value of the name of the contact retrieved from the Android ContactsContract class.
+     */
     public String getContactName(final String phoneNumber, Context context)
     {
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
@@ -163,6 +216,13 @@ public class ConversationRepository
         return contactName;
     }
 
+    /**
+     * Method that gets the phone number using two parameters: name and context. name being the name of the contact and context being the current state of the application.
+     *
+     * @param name String value of the name of the contact.
+     * @param context Current state of the application.
+     * @return Long value of the phone number retrieved from the Android ContactsContract class.
+     */
     public Long getPhoneNumber(final String name, Context context)
     {
         String number="";

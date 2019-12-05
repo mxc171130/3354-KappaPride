@@ -23,26 +23,176 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Date;
 
+/**
+ * This fragment is what contains all of the functionality of messaging between another contact.
+ * <p>
+ *     Contains 13 private attributes and instances:
+ *     <p>
+ *         - m_fragView
+ *     </p>
+ *     <p>
+ *         - m_messageRecyclerView
+ *     </p>
+ *     <p>
+ *         - s_messageViewAdapter
+ *     </p>
+ *     <p>
+ *         - m_deleteActive
+ *     </p>
+ *     <p>
+ *         - m_deleteView
+ *     </p>
+ *     <p>
+ *         - m_warningDialog
+ *     </p>
+ *     <p>
+ *         - m_forwardActive
+ *     </p>
+ *     <p>
+ *         - m_forwardContent
+ *     </p>
+ *     <p>
+ *         - m_forwardDialog
+ *     </p>
+ *     <p>
+ *         - m_errorDialog
+ *     </p>
+ *     <p>
+ *         - m_blacklistActive
+ *     </p>
+ *     <p>
+ *         - m_blacklistContent
+ *     </p>
+ *     <p>
+ *         - m_blacklistDialog
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains 15 public methods:
+ *     <p>
+ *         - onCreateView()
+ *     </p>
+ *     <p>
+ *         - onActivityCreated()
+ *     </p>
+ *     <p>
+ *         - onResume()
+ *     </p>
+ *     <p>
+ *         - onCLose()
+ *     </p>
+ *     <p>
+ *         - onOptionsItemSelected()
+ *     </p>
+ *     <p>
+ *         - onTouch()
+ *     </p>
+ *     <p>
+ *         - onForwardPositiveClickListener()
+ *     </p>
+ *     <p>
+ *         - onForwardNegativeClockListener()
+ *     </p>
+ *     <p>
+ *         - onWarningPositiveClick()
+ *     </p>
+ *     <p>
+ *         - onWarningNegativeClick()
+ *     </p>
+ *     <p>
+ *         - onBlacklistPositiveClick()
+ *     </p>
+ *     <p>
+ *         - onBlacklistNegativeCLick()
+ *     </p>
+ *     <p>
+ *         - onFailedSend()
+ *     </p>
+ *     <p>
+ *         - sendMessage()
+ *     </p>
+ *     <p>
+ *         - getMessageViewAdapter()
+ *     </p>
+ * </p>
+ *
+ * @author Nathan Beck
+ */
 public class MessageFragment extends Fragment implements ForwardDialog.ForwardDialogListener, View.OnTouchListener, SearchView.OnCloseListener, WarningDialog.WarningDialogListener, BlacklistDialog.BlacklistDialogListener
 {
+    /**
+     * Instance of View for the fragment.
+     */
     private View m_fragView;
+
+    /**
+     * Instance of RecyclerView for messages.
+     */
     private RecyclerView m_messageRecyclerView;
+
+    /**
+     * Instance of MessageViewAdapter.
+     */
     private static MessageViewAdapter s_messageViewAdapter;
 
+    /**
+     * Boolean value to determine whether delete was clicked or not.
+     */
     private boolean m_deleteActive;
+
+    /**
+     * Instance of View for deleting.
+     */
     private View m_deleteView;
+
+    /**
+     * Instance of WarningDialog.
+     */
     private WarningDialog m_warningDialog;
 
+    /**
+     * Boolean value to determine whether forward was clicked or not.
+     */
     private boolean m_forwardActive;
+
+    /**
+     * String value to hold what number the message is being forwarded to.
+     */
     private String m_forwardContent;
+
+    /**
+     * Instance of ForwardDialog to show the prompt when forward is clicked.
+     */
     private ForwardDialog m_forwardDialog;
 
+    /**
+     * Instance of ErrorDialog to show the prompt when an error has occurred.
+     */
     private ErrorDialog m_errorDialog;
 
+    /**
+     * Boolean value to determine whether blacklist was clicked or not.
+     */
     private boolean m_blacklistActive;
+
+    /**
+     * Long value to hold the number that the user wants to blacklist.
+     */
     private long m_blacklistContent;
+
+    /**
+     * Instance of BlacklistDialog to show the prompt when the user wants to blacklist a number.
+     */
     private BlacklistDialog m_blacklistDialog;
 
+    /**
+     * Method called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The object that can be used to inflate any views in teh fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to. This is used to generate the LayoutParams of the view. The value may be null.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given by this parameter.
+     * @return The UI view of the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -51,6 +201,11 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         return m_fragView;
     }
 
+    /**
+     * Method called when the fragment's activity has been created and this fragment's view hierarchy instantiated.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state. This value may be null.
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
@@ -76,7 +231,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         super.onActivityCreated(savedInstanceState);
     }
 
-
+    /**
+     * Method called when the fragment is visible to the user and actively running.
+     */
     @Override
     public void onResume()
     {
@@ -85,7 +242,11 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         s_messageViewAdapter.notifyDataSetChanged();
     }
 
-
+    /**
+     * Method that runs when the application is closed.
+     *
+     * @return Unconditionally returns false when called.
+     */
     @Override
     public boolean onClose()
     {
@@ -105,7 +266,12 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         return false;
     }
 
-
+    /**
+     * Method called whenever an item in the options menu is selected.
+     *
+     * @param item The menu item that was selected.
+     * @return Returns false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -134,7 +300,13 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         }
     }
 
-
+    /**
+     * Called when a touch was registered on the touch screen.
+     *
+     * @param v The view the touch was registered in.
+     * @param ev Holds either absolute or relative movements depending on the action and device.
+     * @return true if menu item was clicked (info pertaining to whether or not it was clicked was in the previous method), otherwise false.
+     */
     @Override
     public boolean onTouch(View v, MotionEvent ev)
     {
@@ -221,7 +393,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         return true;
     }
 
-
+    /**
+     * Method that is called when forward is clicked.
+     */
     @Override
     public void onForwardPositiveClickListener()
     {
@@ -245,13 +419,18 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         sendMessage(newConversation, m_forwardContent);
     }
 
-
+    /**
+     * Method that is called when forward is not clicked.
+     */
     @Override
     public void onForwardNegativeClickListener()
     {
 
     }
 
+    /**
+     * Method that is called when message is clicked after clicking on delete in the options menu. It will display a warning.
+     */
     @Override
     public void onWarningPositiveClick()
     {
@@ -277,14 +456,18 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         }
     }
 
-
+    /**
+     * Method that is called when no warning message is suppose to pop up.
+     */
     @Override
     public void onWarningNegativeClick()
     {
 
     }
 
-
+    /**
+     * Method that is called when a number is clicked after blacklist was clicked on in the options menu.
+     */
     @Override
     public void onBlacklistPositiveClick()
     {
@@ -295,6 +478,9 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         FileSystem.getInstance().saveBlacklistNumbers(blacklist);
     }
 
+    /**
+     * Method that is called when a number is to be whitelisted.
+     */
     @Override
     public void onBlacklistNegativeClick()
     {
@@ -305,14 +491,20 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         FileSystem.getInstance().saveBlacklistNumbers(blacklist);
     }
 
-
+    /**
+     * Method that is called is a message failed to send. A dialog will pop up.
+     */
     public void onFailedSend()
     {
         m_errorDialog.show(getActivity().getSupportFragmentManager(), "error_dialog");
     }
 
-
-
+    /**
+     * Method that is called to send a message. It uses two parameters to determine the conversation to send it in and what it will send.
+     *
+     * @param targetConversation The conversation to send the message in.
+     * @param messageContent String value that holds what the message is.
+     */
     public void sendMessage(Conversation targetConversation, String messageContent)
     {
         if(messageContent == null || messageContent.length() == 0)
@@ -334,6 +526,11 @@ public class MessageFragment extends Fragment implements ForwardDialog.ForwardDi
         s_messageViewAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method that will return the MessageViewAdapter.
+     *
+     * @return the message view adapter.
+     */
     public static MessageViewAdapter getMessageViewAdapter()
     {
         return s_messageViewAdapter;

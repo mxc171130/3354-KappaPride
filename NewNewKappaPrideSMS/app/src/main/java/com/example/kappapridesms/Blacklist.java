@@ -74,6 +74,8 @@ public class Blacklist
 
     /**
      * Method that will return the current number of elements in the list.
+     *
+     * @return size of the m_blacklistedNumbers ArrayList
      */
     public int size()
     {

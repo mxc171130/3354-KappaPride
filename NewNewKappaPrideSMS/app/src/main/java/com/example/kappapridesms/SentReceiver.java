@@ -20,9 +20,14 @@ import android.content.Intent;
  *     </p>
  *
  * </p>
+ *
+ * @author Nathan Beck
  */
 public class SentReceiver extends BroadcastReceiver
 {
+    /**
+     * Instance of OnFailedSendListener.
+     */
     private OnFailedSendListener m_onFailedSendListener;
 
     public interface OnFailedSendListener
@@ -30,7 +35,6 @@ public class SentReceiver extends BroadcastReceiver
         void onFailedSend();
     }
 
-    @Override
     /**
      * Overriden onReceive method. Checks if the
      * message was received. If the message was not
@@ -39,6 +43,7 @@ public class SentReceiver extends BroadcastReceiver
      * @param context handle for resolving issues
      * @param intent facilitates communication between Components
      */
+    @Override
     public void onReceive(Context context, Intent intent)
     {
         if(intent.getAction().equals("SMS_SENT"))

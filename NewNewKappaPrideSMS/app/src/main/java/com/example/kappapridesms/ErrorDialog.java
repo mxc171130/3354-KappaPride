@@ -21,9 +21,14 @@ import androidx.fragment.app.DialogFragment;
  *         - onCreateDialog(Bundle savedInstanceState)
  *     </p>
  * </p>
+ *
+ * @author Nathan Beck
  */
 public class ErrorDialog extends DialogFragment
 {
+    /**
+     * String that contains the dialog for an error message.
+     */
     private String m_content = "Message cannot be sent";
 
     /**

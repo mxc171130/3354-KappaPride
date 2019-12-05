@@ -17,6 +17,36 @@ import androidx.fragment.app.DialogFragment;
  *
  * This dialog is opened when the user first selects the forward option from
  * the options menu in the toolbar of Message Activity and selects a message.
+ * <p>
+ *     Contains two private attributes:
+ *     <p>
+ *         - m_dialogListener
+ *     </p>
+ *     <p>
+ *         - m_forwardContent
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains six public methods:
+ *     <p>
+ *         - onCreate()
+ *     </p>
+ *     <p>
+ *         - onAttach()
+ *     </p>
+ *     <p>
+ *         - onCreateDialog()
+ *     </p>
+ *     <p>
+ *         - onClick()
+ *     </p>
+ *     <p>
+ *         - onCLick()
+ *     </p>
+ *     <p>
+ *         - getForwardContent()
+ *     </p>
+ * </p>
  *
  * @author Nathan Beck
  */
@@ -60,6 +90,7 @@ public class ForwardDialog extends DialogFragment
     /**
      * Attaches this AddContactDialog to a given context, registering this contact
      * as a ContactDialogListener for its button events.
+     *
      * @param context The context to attach this AddContactDialog.
      */
     @Override
@@ -99,6 +130,12 @@ public class ForwardDialog extends DialogFragment
 
         // Specify the onClick functionality for this dialog.
         dialogBuilder.setPositiveButton("Forward", new DialogInterface.OnClickListener() {
+            /**
+             * Method that is called when the button in the dialog is clicked.
+             *
+             * @param dialog The dialog that received the click.
+             * @param which Denotes which button was clicked.
+             */
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -107,6 +144,12 @@ public class ForwardDialog extends DialogFragment
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            /**
+             * Method that is called when the button in the dialog is clicked.
+             *
+             * @param dialog The dialog that received the click.
+             * @param which Denotes which button was clicked.
+             */
             @Override
             public void onClick(DialogInterface dialog, int which)
             {

@@ -17,11 +17,29 @@ import java.util.Date;
 import static android.provider.Telephony.Sms.Intents.SMS_RECEIVED_ACTION;
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
+/**
+ * Class that is responsible for dealing with receiving messages.
+ * <p>
+ *     Contains one private attribute:
+ *     <p>
+ *         - NOTIFICATION
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains one public method:
+ *     <p>
+ *         - onReceive()
+ *     </p>
+ * </p>
+ *
+ * @author Nathan Beck
+ */
 public class SMSReceiver extends BroadcastReceiver
 {
     public static final String NOTIFICATION = "kappa_notification";
 
     /**
+     *
      *
      * @param context
      * @param intent the intent is the SMS message that will be sent

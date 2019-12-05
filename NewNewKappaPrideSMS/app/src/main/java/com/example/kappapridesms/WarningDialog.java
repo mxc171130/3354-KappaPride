@@ -31,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
  * </p>
  *
  * edited by Mohammad Shalabi
+ * @author Nathan Beck
  */
 public class WarningDialog extends DialogFragment
 {

@@ -17,13 +17,85 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Tasked with the creation of the conversations, whether that be the UI, view adapters, or permissions.
+ * <p>
+ *     Contains two private attributes:
+ *     <p>
+ *         - s_conversationViewAdapter
+ *     </p>
+ *     <p>
+ *         - m_conversationDialog
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains five public methods:
+ *     <p>
+ *         - oncreateOptionsMenu()
+ *     </p>
+ *     <p>
+ *         - onOptionsItemSelected()
+ *     </p>
+ *     <p>
+ *         - onConversationPositiveClick()
+ *     </p>
+ *     <p>
+ *         - onConversationNegativeClick()
+ *     </p>
+ *     <p>
+ *         - getConversationViewAdapter()
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains two protected methods:
+ *     <p>
+ *         - onCreate()
+ *     </p>
+ *     <p>
+ *         - onResume()
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains four private methods:
+ *     <p>
+ *         - initializeToolBar()
+ *     </p>
+ *     <p>
+ *         - setUpPermissions()
+ *     </p>
+ *     <p>
+ *         - initializeRecyclerView()
+ *     </p>
+ *     <p>
+ *         - initializeViewAdapter
+ *     </p>
+ * </p>
+ *
+ * @author Nathan Beck
+ */
+
 public class ConversationActivity extends AppCompatActivity implements ConversationDialog.ConversationDialogListener
 {
+    /**
+     * Static variable for the ConversationViewAdapter
+     */
     private static ConversationViewAdapter s_conversationViewAdapter;
+
+    /**
+     * Static final, special value, for the permission request code
+     */
     public static final int PERM_REQUEST_CODE = 227;
 
+    /**
+     * Variable of class ConversationDialog
+     */
     private ConversationDialog m_conversationDialog;
 
+    /**
+     * Method that saves the state of the application and sets many variables when said application is created. i.e. when the screen is rotated.
+     *
+     * @param savedInstanceState This contains the data of the state of the application in a bundle. This is in case the activity needs to be recreated, they know this is the state.
+     */
     //TODO
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +120,11 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that initializes the toolbar so that it appears when the activity is created.
+     *
+     * @return A new toolbar instance to be displayed by the Activity.
+     */
     private Toolbar initializeToolBar()
     {
         Toolbar mainTool = findViewById(R.id.conversation_toolbar);
@@ -56,6 +133,9 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that sets up the permissions so that various functions are able to work with the Android OS. Users must respond to a prompt in order to agree to these permissions.
+     */
     private void setUpPermissions()
     {
         boolean[] perms = new boolean[6];
@@ -122,6 +202,11 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that initializes the RecyclerView so that conversations can be displayed in the UI. Sets some values of the recycler view.
+     *
+     * @return A new RecyclerView instance to be displayed by the Activity.
+     */
     private RecyclerView initializeRecyclerView()
     {
         RecyclerView conversationRecyclerView = (RecyclerView) findViewById(R.id.conversation_recycler);
@@ -131,6 +216,11 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that initializes the ViewAdapter that acts as the bridge between the UI components and data sources.
+     *
+     * @param conversationRecyclerView the RecyclerView that we initialized earlier before calling this function.
+     */
     private void initializeViewAdapter(RecyclerView conversationRecyclerView)
     {
         s_conversationViewAdapter = new ConversationViewAdapter();
@@ -138,6 +228,9 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
         conversationRecyclerView.setAdapter(s_conversationViewAdapter);
     }
 
+    /**
+     * Method that will retrieve the conversations from the ConversationRepository and notify the view adapter that the data set has changed. This method is called when the activity is restarted.
+     */
     @Override
     protected void onResume()
     {
@@ -147,6 +240,12 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that creates the three dot options menu on the right side of the toolbar.
+     *
+     * @param menu This indicates which menu was passed to it.
+     * @return Unconditional true to indicate that the menu was created.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -157,6 +256,12 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that finds out which item was selected from the options menu.
+     *
+     * @param item Indicates which item it is.
+     * @return Unconditional true to indicate that an options item was selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -173,6 +278,9 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     }
 
 
+    /**
+     * Method that will create a new message activity when create a new conversation is clicked.
+     */
     @Override
     public void onConversationPositiveClick()
     {
@@ -207,12 +315,20 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
         startActivity(startMessageActvityIntent);
     }
 
+    /**
+     * Method that does nothing.
+     */
     @Override
     public void onConversationNegativeClick()
     {
 
     }
 
+    /**
+     * Method that will return the view adapter for the conversation.
+     *
+     * @return the view adapter for the conversation
+     */
     public static ConversationViewAdapter getConversationViewAdapter()
     {
         return s_conversationViewAdapter;

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
  *         - public int getItemCount()
  *     </p>
  * </p>
+ *
+ * @author Nathan Beck
  */
 public class MessageViewAdapter extends RecyclerView.Adapter<MessageViewHolder>
 {

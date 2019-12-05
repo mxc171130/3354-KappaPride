@@ -38,11 +38,23 @@ import java.util.Locale;
  * </p>
  *
  * edited by Mohammad Shalabi
+ * @author Nathan Beck
  */
 public class Message
 {
+    /**
+     * The timestamp of when the message was sent.
+     */
     private long m_timestamp;
+
+    /**
+     * Boolean value that is true if it was sent from the users phone, otherwise false.
+     */
     private boolean m_sentFromThisPhone;
+
+    /**
+     * String value of what the message contained.
+     */
     private String m_content;
 
     /**

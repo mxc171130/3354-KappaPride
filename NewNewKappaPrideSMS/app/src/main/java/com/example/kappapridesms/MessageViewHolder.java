@@ -6,7 +6,20 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * This class is responsible for the design of messageBubbles
  *and they are organized within the activities
+ * <p>
+ *     Contains one private attribute:
+ *     <p>
+ *         - m_messageBubble
+ *     </p>
+ * </p>
+ * <p>
+ *     Contains one public method:
+ *     <p>
+ *         - getMessageBubble()
+ *     </p>
+ * </p>
  *
+ * @author Nathan Beck
  */
 
 public class MessageViewHolder extends RecyclerView.ViewHolder
